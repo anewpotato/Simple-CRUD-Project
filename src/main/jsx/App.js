@@ -1,12 +1,54 @@
 import ReactDOM from 'react-dom';
-import MainPage from './MainPage';
-import Page1Page from './Page1Page';
+import Header from './components/Header';
+import Selector from './components/Selector';
+import Footer from './components/Footer';
+import Article from './components/Article';
 import React, {Component} from 'react';
 import { Link, Route, BrowserRouter as Router } from "react-router-dom";
-
+import '../webapp/resources/css/custom.css';
 
 class App extends Component{
+	 constructor(props){
+	    super(props);
+	    this.state = {
+	      mode:'welcome',
+	      welcome:{desc:'Hello, Welcome to the Simple CRUD!!'},
+	      read:{desc:'No more postings!!'},
+	      create:{desc:'Write a post'}
+	      
+	    };
+	  }
 	
+	 getContent(){
+		    var _title, _desc,_mode,_article = null;
+		    if(this.state.mode === 'welcome'){
+		    _mode = this.state.mode;
+		    _desc = this.state.welcome.desc;
+		    _article = <Article mode = {_mode} desc={_desc}></Article>;
+		    }
+		    else if(this.state.mode === 'read'){
+		    	_mode = this.state.mode;
+			    _desc = this.state.read.desc;
+			    _article = <Article mode = {_mode} desc={_desc}></Article>;
+		    }
+		    else if(this.state.mode === 'create'){
+		    	_mode = this.state.mode;
+		    	_desc = this.state.create.desc;
+			    _article = <Article mode = {_mode} desc={_desc}></Article>;
+		    }
+		    else if(this.state.mode === 'update'){
+		    	_mode = this.state.mode;
+		    	
+			    _article = <Article mode = {_mode} ></Article>;
+		    }
+		    else if(this.state.mode === 'delete'){
+		    	_mode = this.state.mode;
+		    	
+			    _article = <Article mode = {_mode} ></Article>;
+		    }
+		    return _article;
+	 }
+	 
 	render(){
 		return(
 				//리액트 라우터 예제
@@ -26,14 +68,24 @@ class App extends Component{
 //				  <Route path="/page1" component={Page1Page} />
 //				</main>	
 //			</Router>
-				<div className="container MyComponent">
-		        <div className="jumbotron">
-		          Hello there!
-		          <button type="button" className="btn btn-primary">
-		            Bootstrap Button!
-		          </button>
-		        </div>
-		      </div>
+			<div className="app"> 
+			
+				<Header onChangeMode = {function(){
+				       this.setState({
+				           mode:'welcome'				      
+				         });
+				       }.bind(this)}></Header> 
+				       
+				<Selector onChangeMode = {function(_mode){
+				       this.setState({
+				           mode:_mode				      
+				         });
+				       }.bind(this)}></Selector>
+				       
+				{this.getContent()}
+				
+				<Footer /> 
+			</div>			
 		);
 	}
 }

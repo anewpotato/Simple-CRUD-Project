@@ -1,3 +1,32 @@
 @charset "EUC-KR";
-.main { font-size: 24px; border-bottom: solid 1px black; }
-.page1 { font-size: 14px; background-color: yellow; }
+.header{font-size: 25px;text-align: center;color:powderblue}
+#header_hr{margin-top:0;margin-bottom:0}
+.selectors_toggle{width:100%}
+
+#writer, #title, #content{
+	margin:20px;
+	margin-bottom:10px;
+	margin-top:10px;
+}
+#writer{
+	margin-right:1200px;
+}
+#content_view{
+	height:400px;
+}
+#buttons{
+	margin-left:20px;
+}
+.w_button{
+	margin-right:5px;
+}
+.post{width:100%;display:flex}
+.article{margin-top:10px;text-align:center;height:100%;width:100%;}
+.app{height:100%;width:100%;}
+.footer{position: fixed;left: 0;bottom: 0;width: 100%;margin:5px}
+.welcome_img{height:200px;}
+
+
+a:visited { color: black; text-decoration: none;}
+a:hover { color: blue; text-decoration: underline;}
+

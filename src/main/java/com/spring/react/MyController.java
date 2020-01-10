@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class MyController {
  
-	@RequestMapping(value = "/{name}.html", method = RequestMethod.GET)
+	@RequestMapping(value = "/{name}", method = RequestMethod.GET)
     public String page(@PathVariable String name, Model model) {
         model.addAttribute("pageName", name);
        

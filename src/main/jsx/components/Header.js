@@ -1,15 +1,17 @@
 import React, {Component} from 'react';
 import ReactDOM from 'react-dom';
+import { LinkContainer } from 'react-router-bootstrap';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 class Header extends Component {
 	render() {
         return(
         	<div className="header"> 
         		
-        		<h1><a href="/" onClick={function(e){
-        	        e.preventDefault();
-        	        this.props.onChangeMode();
-        	      }.bind(this)}>Simple CRUD</a></h1>
+        	 <LinkContainer exact to="/react/index">
+        	 <h1><a href="/" >Simple CRUD</a></h1>
+        	 </LinkContainer>
+        	 
         		
         		
         	</div>

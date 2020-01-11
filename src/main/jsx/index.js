@@ -3,7 +3,8 @@ import ReactDOM from 'react-dom';
 import App from './App';
 import '../include/bootstrap';
 
+import { Link, Route, BrowserRouter as Router } from "react-router-dom";
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<Router><App /></Router>, document.getElementById('root'));
 
 

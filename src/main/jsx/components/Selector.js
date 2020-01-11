@@ -1,4 +1,7 @@
 import React, {Component} from 'react';
+import { LinkContainer } from 'react-router-bootstrap';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+
 import ReactDOM from 'react-dom';
 import { ButtonGroup } from 'react-bootstrap';
 import { ToggleButton } from 'react-bootstrap';
@@ -12,39 +15,39 @@ class Selector extends Component {
 	
 		render() {
 			return(
-					<div className="selector">       		
+					<nav className="selector"> 
+					
+						
 		        		<ButtonGroup toggle className="selectors_toggle" >
+		        			
+		        		<LinkContainer to="/react/create">
 				            <ToggleButton 
-				            onClick={function(e){
-			        	        e.preventDefault();
-			        	        this.props.onChangeMode('create');
-			        	      }.bind(this)}
+				            
 				            type="radio" name="create" value="1" variant="secondary">
 				              Create
-				            </ToggleButton>
-				            <ToggleButton onClick={function(e){
-			        	        e.preventDefault();
-			        	        this.props.onChangeMode('read');
-			        	      }.bind(this)}
+				              </ToggleButton>
+				         </LinkContainer>
+				         
+				         <LinkContainer to="/react/read">  
+				            <ToggleButton 
 				            type="radio" name="read" value="2" variant="secondary">
 				              Read
 				            </ToggleButton>
-				            <ToggleButton onClick={function(e){
-			        	        e.preventDefault();
-			        	        this.props.onChangeMode('update');
-			        	      }.bind(this)}
+						 </LinkContainer>
+  
+				            <ToggleButton 
 				            type="radio" name="update" value="3" variant="secondary">
 				              Update
 				            </ToggleButton>
-				            <ToggleButton onClick={function(e){
-			        	        e.preventDefault();
-			        	        this.props.onChangeMode('delete');
-			        	      }.bind(this)}
+				              
+				            <ToggleButton 
 				            type="radio" name="delete" value="4" variant="secondary">
 				              Delete
-				            </ToggleButton>  
+				            </ToggleButton> 
+				              
 		              	</ButtonGroup>
-		        	</div>
+		              	
+		        	</nav>
 
 				);
 			}

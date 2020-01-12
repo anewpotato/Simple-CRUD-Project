@@ -23,7 +23,35 @@
 	</beans:bean>
 	
 	<context:component-scan base-package="com.spring.react" />
-	
+	<beans:bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" name="dataSource">
+
+<beans:property value="oracle.jdbc.driver.OracleDriver" name="driverClassName"/>
+
+<beans:property value="jdbc:oracle:thin:@localhost:1521:orcl" name="url"/>
+
+<beans:property value="scott" name="username"/>
+
+<beans:property value="0681534aB" name="password"/>
+
+</beans:bean>
+
+<beans:bean class="org.springframework.jdbc.core.JdbcTemplate" name="template">
+
+<beans:property name="dataSource" ref="dataSource"/>
+
+</beans:bean>
+
+<beans:bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
+
+<beans:property name="dataSource" ref="dataSource"/>
+
+<beans:property value="classpath:com/spring/react/dao/mapper/*.xml" name="mapperLocations"/>
+
+</beans:bean>
+<beans:bean class="org.mybatis.spring.SqlSessionTemplate" id="sqlSession">
+
+<beans:constructor-arg ref="sqlSessionFactory" index="0"/>
+</beans:bean>
 
 	
 </beans:beans>

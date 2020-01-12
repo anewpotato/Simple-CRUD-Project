@@ -7,10 +7,13 @@ import { ButtonGroup } from 'react-bootstrap';
 import { ToggleButton } from 'react-bootstrap';
 
 class Selector extends Component {
+		
 		constructor(props) {
 		    super(props);
 		   
+		    
 		}
+		
 		
 	
 		render() {
@@ -28,23 +31,24 @@ class Selector extends Component {
 				              </ToggleButton>
 				         </LinkContainer>
 				         
-				         <LinkContainer to="/react/read">  
+				         <LinkContainer to="/react/read" >  
 				            <ToggleButton 
 				            type="radio" name="read" value="2" variant="secondary">
 				              Read
 				            </ToggleButton>
 						 </LinkContainer>
-  
+						 <LinkContainer to="/react/update">
 				            <ToggleButton 
 				            type="radio" name="update" value="3" variant="secondary">
 				              Update
 				            </ToggleButton>
-				              
+				         </LinkContainer>
+				         <LinkContainer to="/react/delete">
 				            <ToggleButton 
 				            type="radio" name="delete" value="4" variant="secondary">
 				              Delete
 				            </ToggleButton> 
-				              
+				          </LinkContainer>     
 		              	</ButtonGroup>
 		              	
 		        	</nav>

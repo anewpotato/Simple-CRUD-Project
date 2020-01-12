@@ -20,8 +20,11 @@
 .w_button{
 	margin-right:5px;
 }
+.content_head{flex:1 5 1 1}
+.content_writer, .content_date, .content_hit{flex:1}
+.content_title{flex:5}
 .post{width:100%;display:flex}
-.article{margin-top:10px;text-align:center;height:100%;width:100%;}
+.article, .home,.create,.read,.update,.delete{margin-top:10px;text-align:center;height:100%;width:100%;}
 .app{height:100%;width:100%;}
 .footer{position: fixed;left: 0;bottom: 0;width: 100%;margin:5px}
 .welcome_img{height:200px;}

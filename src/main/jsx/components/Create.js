@@ -7,7 +7,8 @@ import { Button } from 'react-bootstrap';
 class Create extends Component {
 	render() {
         return(
-        	<div>
+        	<div className="create">
+        		<h2>{this.props.desc}</h2>
 				<div id="writer"> 
 				<InputGroup >
 					<InputGroup.Prepend>

@@ -16,7 +16,7 @@ class Home extends Component {
 		  	    </Col>	        
 		  	  </Row>
 		  	</Container>
-        		
+        		<h2>{this.props.desc}</h2>
         		
         	</div>
         );

@@ -5,6 +5,9 @@ import Header from './Header';
 import Create from './Create';
 import Home from './Home';
 import Read from './Read';
+import Update from './Update';
+import Delete from './Delete';
+
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 
@@ -15,7 +18,9 @@ class Article extends Component {
 	    this.state = {
 	      welcome:{desc:'Hello, Welcome to the Simple CRUD!!'},
 	      read:{desc:'No more postings!!'},
-	      create:{desc:'Write a post'}
+	      create:{desc:'Write a posting'},
+	      update:{desc:'Choose title of a posting that you want to update'},
+	      delete:{desc:'Choose title of a posting that you want to delete'}
 	      
 	    };
 	  }
@@ -36,11 +41,12 @@ class Article extends Component {
         	<Selector></Selector>
         	
 			<Switch>
-				<Route exact path="/react/create" component={Create} />
-				<Route exact path="/react/index" component={Home} />
-				<Route exact path="/react/read" component={Read} />
-
-        	</Switch>
+				<Route exact path = "/react/index" render={ props => <Home desc={this.state.welcome.desc}/>}/>
+				<Route exact path="/react/create" render={ props => <Create desc={this.state.create.desc} />}/>	
+				<Route exact path="/react/read" render={ props => <Read desc={this.state.read.desc} />}/>
+				<Route exact path="/react/update" render={ props => <Update desc={this.state.update.desc} />}/>
+				<Route exact path="/react/delete" render={ props => <Delete desc={this.state.delete.desc} />}/>
+			</Switch>
 			
         	        	
 	           

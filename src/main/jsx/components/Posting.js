@@ -42,6 +42,8 @@ class Posting extends Component {
 		    		 alert('Can\'t call data of posting');
 		    	}
 		    });
+		 
+		
 		
 		 
 		 

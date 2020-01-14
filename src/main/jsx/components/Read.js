@@ -54,6 +54,7 @@ class Read extends Component {
 		  var contentList = this.state.values.map((_content,_index) => ( 
 		  																
 				  														<ListGroup horizontal key={_index}>
+				  														this.props.mode ==='update' && <h2>update</h2>
 		  																<ListGroup.Item className="content_writer">{_content.bName}</ListGroup.Item>
 		  																<LinkContainer to={`/react/read/${_content.bId}`}>
 		  																<ListGroup.Item className="content_title"><a href="/" >{_content.bTitle}</a></ListGroup.Item>

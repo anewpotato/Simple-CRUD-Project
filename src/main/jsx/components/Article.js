@@ -44,7 +44,6 @@ class Article extends Component {
 				<Route exact path="/react/create" render={ props => <Create desc={this.state.create.desc} />}/>	
 				<Route exact path="/react/read" render={ props => <Read desc={this.state.read.desc} mode={'read'} />}/>
 				<Route exact path="/react/read/:bId" component={Posting}/>
-
 				<Route exact path="/react/update" render={ props => <Read desc={this.state.update.desc}  mode={'update'} />}/>
 				<Route exact path="/react/delete" render={ props => <Read desc={this.state.delete.desc}  mode={'delete'}/>}/>
 				

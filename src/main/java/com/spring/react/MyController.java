@@ -55,6 +55,18 @@ public class MyController {
 	       
 	        return retVal;
 	    }
+	//게시판의 수정을 위한 특정 글 정보 요청
+		 @RequestMapping(value = "/update/{id}", method = RequestMethod.GET) 
+		    public @ResponseBody Object getUpdateContent(@PathVariable("id") final String id) {
+		        IDao dao = sqlSession.getMapper(IDao.class);
+		        Map<String, Object> retVal = new HashMap<String, Object>();
+		        ContentDto dto = new ContentDto();
+		        dto = dao.viewDao(id);
+		        
+		        retVal.put("post",dto);
+		       
+		        return retVal;
+		    }
 	 
 	 
 	 //게시판에 글 작성 정보 수신
@@ -67,6 +79,17 @@ public class MyController {
 	       
 	       
 	    }
+	 
+	 	//게시판에 글 수정 정보 수신
+		 @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
+		 @ResponseBody
+		    public void updateContent(@PathVariable("id") final String id,@RequestBody final ContentDto dto) {
+			 IDao dao = sqlSession.getMapper(IDao.class);
+			 dao.updateDao(dto.getbName(),dto.getbTitle(),dto.getbContent(),id);
+
+		       
+		       
+		    }
 	 
 	 
 	

@@ -14,15 +14,62 @@ class Create extends Component {
 	     super(props);
 	     this.state={
 	        isCreated:'false',
+	        isModify:'false',
 	    	content:{
+	    		bName:'Write a Name',
+	    		bTitle:'Write a Title',
+	    		bContent:'Write a Content'
+	    	},
+	    	update:{
 	    		bName:'',
 	    		bTitle:'',
 	    		bContent:''
-	    	}	 
+	    	}
 	     };
 	  }
-	 
+	 componentDidMount(){
+		 	if(this.props.mode==='update'){
+			var _value = null;
+			var _bId = this.props.match.params.bId;
+			
+			 $.ajax({ 
+			    	type:"GET", 
+			    	url: '/react/update/'+_bId,
+			    	dataType: "json", 
+			    	cache : false, 
+			    	success : function(resData)
+			    	{ 
+			    		
+			    		_value = resData.post;
+			    		
+			    		
+			    		var sysdate = new Date(_value.bDate);
+					    _value.bDate = String(sysdate.getFullYear())+'/'+String(sysdate.getMonth()+1)+'/'+String(sysdate.getDate());
+					   
+			    		
+			    		this.setState({
+			    			 content:{
+			    				 	bName:_value.bName,
+				    	    		bTitle:_value.bTitle,
+				    	    		bContent:_value.bContent
+					  		      },
+			    			update:{
+			    	    		bName:_value.bName,
+			    	    		bTitle:_value.bTitle,
+			    	    		bContent:_value.bContent
+			    	    	}
+			    		});
+			    		
+			    	}.bind(this),
+			    	error : function(request,status,error){
+//			    		 alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
+			    		 alert('Can\'t call data of posting');
+			    	}
+			    });	
+		 	}
+		}
 	 handleChange() {
+		 
 		 this.setState({
 		      content:{
 		    	  bName:this.writerInput.value,
@@ -30,9 +77,11 @@ class Create extends Component {
 		    	  bContent:this.contentInput.value
 		      }
 		 });
+		 
 	 }
 	 
 	 sendContent(){
+		 if(this.props.mode==='create'){
 		 $.ajax({ 
 		    	type:"POST", 
 		    	url: "/react/create",
@@ -58,6 +107,36 @@ class Create extends Component {
 		    		 alert('Can\'t create a posting');
 		    	}
 		    });
+		 } 
+		 if(this.props.mode==='update'){
+			 var _bId = this.props.match.params.bId;
+			 
+			 $.ajax({ 
+			    	type:"PUT", 
+			    	url: "/react/update/"+_bId,
+			    	contentType: "application/json",
+			    	data : JSON.stringify(this.state.content),
+			    	cache : false, 
+			    	success : function(resData)
+			    	{ 
+			    		this.setState({
+			    		  isModify:'true',
+			  		      content:{
+			  		    	bName:'',
+			  		    	bTitle:'',
+			  		    	bContent:''
+			  		      }
+			    		
+			  		 });
+			    		alert('Modify is completed!!');
+			    		
+			    	}.bind(this),
+			    	error : function(request,status,error){
+//			    		 alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
+			    		 alert('Can\'t create a posting');
+			    	}
+			    });
+			 }
 	 }
 	 
 	 resetContent(){
@@ -76,7 +155,7 @@ class Create extends Component {
 	render() {
         return(
         	<div className="create">
-        		{this.state.isCreated ==='true' && <Redirect to="/react/read"/>}
+        		{(this.state.isCreated ==='true'||this.state.isModify==='true') && <Redirect to="/react/read"/>}
         		<h2>{this.props.desc}</h2>
 				<div id="writer">
 				<InputGroup >
@@ -87,7 +166,7 @@ class Create extends Component {
 			 		<FormControl
 			 		 	ref={(input) => { this.writerInput = input; }}
 			 			onChange={() => {this.handleChange()}}
-			 		    placeholder='Write your Name'
+			 		    placeholder={this.props.mode==='create'?this.state.content.bName : this.state.update.bName}
 			 		    
 			 		  />
 			 		 </InputGroup>
@@ -102,7 +181,7 @@ class Create extends Component {
 			 		<FormControl
 			 			ref={(input) => { this.titleInput = input; }}
 			 			onChange={() => {this.handleChange()}}
-			 		    placeholder='Write a Title'
+			 		    placeholder={this.props.mode==='create'?this.state.content.bTitle : this.state.update.bTitle}
 			 		    	
 			 		   
 			 		  />
@@ -114,7 +193,7 @@ class Create extends Component {
 			 	    <InputGroup.Prepend>
 			 	      <InputGroup.Text >Content</InputGroup.Text>
 			 	    </InputGroup.Prepend>
-			 	    <FormControl as="textarea" placeholder='Write a Content'
+			 	    <FormControl as="textarea" placeholder={this.props.mode==='create'?this.state.content.bContent : this.state.update.bContent}
 			 	    	ref={(input) => { this.contentInput = input; }}
 			 	    	onChange={() => {this.handleChange()}}
 			 	    	
@@ -126,11 +205,14 @@ class Create extends Component {
 			 		<div id="buttons">
 			 		<ButtonToolbar>
 			 		  
-			 		  <Button onClick={() => this.sendContent()} variant="outline-primary" className="w_button" type="submit">Submit</Button>
+			 		  <Button onClick={() => this.sendContent()} variant="outline-primary" className="w_button" type="submit">
+			 		  {this.props.mode==='create'?'Submit':'Update'}</Button>
 			 		  <Button onClick={() => this.resetContent()} variant="outline-primary" className="w_button" type="reset" >Reset</Button>
-			 		  <Link to="/react/read"> 
+			 		  {this.props.mode==='create'?<Link to="/react/read"> 
 			 		  <Button variant="outline-primary" className="w_button"  type="button">Back to the list</Button>
-			 		  </Link>
+			 		  </Link>:<Link to="/react/update"> 
+			 		  <Button variant="outline-primary" className="w_button"  type="button">Back to the list</Button>
+			 		  </Link>}
 			 		  </ButtonToolbar>
 			 		</div>
 			 		

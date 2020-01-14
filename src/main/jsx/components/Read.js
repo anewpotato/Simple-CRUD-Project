@@ -4,6 +4,7 @@ import { ListGroup } from 'react-bootstrap';
 import { Card } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 
+
 class Read extends Component {
 	constructor(props) {
 	    super(props);
@@ -52,16 +53,30 @@ class Read extends Component {
 	render() {
 		  
 		  var contentList = this.state.values.map((_content,_index) => ( 
-		  																
+				  														
+																		  
+																	
 				  														<ListGroup horizontal key={_index}>
-				  														this.props.mode ==='update' && <h2>update</h2>
 		  																<ListGroup.Item className="content_writer">{_content.bName}</ListGroup.Item>
-		  																<LinkContainer to={`/react/read/${_content.bId}`}>
+		  																{this.props.mode==='read'&&<LinkContainer to={`/react/read/${_content.bId}`}>
 		  																<ListGroup.Item className="content_title"><a href="/" >{_content.bTitle}</a></ListGroup.Item>
 		  																</LinkContainer>
+		  																}
+		  																{this.props.mode==='update'&&<LinkContainer to={`/react/update/${_content.bId}`}>
+		  																<ListGroup.Item className="content_title"><a href="/" >{_content.bTitle}</a></ListGroup.Item>
+		  																</LinkContainer>
+		  																}
+		  																{this.props.mode==='delete'&&<LinkContainer to={`/react/delete/${_content.bId}`}>
+		  																<ListGroup.Item className="content_title"><a href="/" >{_content.bTitle}</a></ListGroup.Item>
+		  																</LinkContainer>
+		  																}
 		  																<ListGroup.Item className="content_date">{_content.bDate}</ListGroup.Item>
 		  																<ListGroup.Item className="content_hit">{_content.bHit}</ListGroup.Item>
-		  																</ListGroup>));
+		  																</ListGroup>
+		  																
+		  																));
+		  
+		
 		  
         return(
         	<div className="read"> 
@@ -75,7 +90,7 @@ class Read extends Component {
 			  <ListGroup.Item style={{flex:'1'}}>Views</ListGroup.Item>			  
 			  </ListGroup>
 			</Card>
-        	{contentList}
+        	 {contentList}
         	{this.props.mode ==='read' && <h2>{this.props.desc}</h2>}
         	
         		

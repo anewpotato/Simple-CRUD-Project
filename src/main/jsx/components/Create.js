@@ -48,11 +48,7 @@ class Create extends Component {
 					   
 			    		
 			    		this.setState({
-			    			 content:{
-			    				 	bName:_value.bName,
-				    	    		bTitle:_value.bTitle,
-				    	    		bContent:_value.bContent
-					  		      },
+			    			 
 			    			update:{
 			    	    		bName:_value.bName,
 			    	    		bTitle:_value.bTitle,
@@ -69,14 +65,27 @@ class Create extends Component {
 		 	}
 		}
 	 handleChange() {
-		 
+		 console.log(this.state.update);
+		 console.log(this.state.content);
+		 if(this.props.mode==='update'){
 		 this.setState({
-		      content:{
+		      
+		      update:{
 		    	  bName:this.writerInput.value,
 		    	  bTitle:this.titleInput.value,
 		    	  bContent:this.contentInput.value
 		      }
 		 });
+		 }else if(this.props.mode==='create'){
+			 this.setState({
+			      
+			      content:{
+			    	  bName:this.writerInput.value,
+			    	  bTitle:this.titleInput.value,
+			    	  bContent:this.contentInput.value
+			      }
+			 });
+		 }
 		 
 	 }
 	 
@@ -108,24 +117,24 @@ class Create extends Component {
 		    	}
 		    });
 		 } 
-		 if(this.props.mode==='update'){
+		 else if(this.props.mode==='update'){
 			 var _bId = this.props.match.params.bId;
-			 
+			 console.log(this.state.update);
 			 $.ajax({ 
 			    	type:"PUT", 
 			    	url: "/react/update/"+_bId,
 			    	contentType: "application/json",
-			    	data : JSON.stringify(this.state.content),
+			    	data : JSON.stringify(this.state.update),
 			    	cache : false, 
 			    	success : function(resData)
 			    	{ 
 			    		this.setState({
 			    		  isModify:'true',
-			  		      content:{
-			  		    	bName:'',
-			  		    	bTitle:'',
-			  		    	bContent:''
-			  		      }
+			  		      update:{
+				  		    	bName:'',
+				  		    	bTitle:'',
+				  		    	bContent:''
+				  		      }
 			    		
 			  		 });
 			    		alert('Modify is completed!!');
@@ -148,7 +157,11 @@ class Create extends Component {
 			    		bName:'',
 			    		bTitle:'',
 			    		bContent:''
-			    	}	 
+			    	},update:{
+			    		bName:'',
+			    		bTitle:'',
+			    		bContent:''
+			    	}		 
 			     };
 	 }
 	 
@@ -167,7 +180,7 @@ class Create extends Component {
 			 		 	ref={(input) => { this.writerInput = input; }}
 			 			onChange={() => {this.handleChange()}}
 			 		    placeholder={this.props.mode==='create'?this.state.content.bName : this.state.update.bName}
-			 		    
+			 			defaultValue={this.props.mode==='create'?this.state.content.bName : this.state.update.bName}
 			 		  />
 			 		 </InputGroup>
 			 		</div>
@@ -182,7 +195,7 @@ class Create extends Component {
 			 			ref={(input) => { this.titleInput = input; }}
 			 			onChange={() => {this.handleChange()}}
 			 		    placeholder={this.props.mode==='create'?this.state.content.bTitle : this.state.update.bTitle}
-			 		    	
+			 		defaultValue={this.props.mode==='create'?this.state.content.bTitle : this.state.update.bTitle}	
 			 		   
 			 		  />
 		 	   </InputGroup>
@@ -196,7 +209,7 @@ class Create extends Component {
 			 	    <FormControl as="textarea" placeholder={this.props.mode==='create'?this.state.content.bContent : this.state.update.bContent}
 			 	    	ref={(input) => { this.contentInput = input; }}
 			 	    	onChange={() => {this.handleChange()}}
-			 	    	
+			 	   defaultValue={this.props.mode==='create'?this.state.content.bContent : this.state.update.bContent}
 			 	    	
 			 	    />
 			 	    </InputGroup>
@@ -210,7 +223,7 @@ class Create extends Component {
 			 		  <Button onClick={() => this.resetContent()} variant="outline-primary" className="w_button" type="reset" >Reset</Button>
 			 		  {this.props.mode==='create'?<Link to="/react/read"> 
 			 		  <Button variant="outline-primary" className="w_button"  type="button">Back to the list</Button>
-			 		  </Link>:<Link to="/react/update"> 
+			 		  </Link> : <Link to="/react/update"> 
 			 		  <Button variant="outline-primary" className="w_button"  type="button">Back to the list</Button>
 			 		  </Link>}
 			 		  </ButtonToolbar>

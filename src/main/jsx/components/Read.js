@@ -22,8 +22,37 @@ class Read extends Component {
 	    
 	    
 	}
-	
-	
+
+	shouldComponentUpdate(nextProps,nextState){
+		if(this.state.isDeleted !== nextState.isDeleted){
+		var _values=[];
+		 $.ajax({ 
+		    	type:"GET", 
+		    	url: '/react/read',
+		    	dataType: "json", 
+		    	cache : false, 
+		    	success : function(resData)
+		    	{ 
+		    		_values = resData.contents;
+		    		
+		    		$.each(_values, function( index, value ) {
+						  var sysdate = new Date(value.bDate);
+						  value.bDate = String(sysdate.getFullYear())+'/'+String(sysdate.getMonth()+1)+'/'+String(sysdate.getDate());
+						});
+		    		
+		    		this.setState({
+		    			values:this.state.values.concat(_values)
+		    		});
+		    	}.bind(this),
+		    	error : function(request,status,error){
+//		    		 alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
+		    		 alert('Can\'t call data of board');
+		    	}
+		    });
+		
+		}
+		 return true;
+	}
 	
 	componentDidMount(){
 		var _values=[];
@@ -54,18 +83,13 @@ class Read extends Component {
 		 
 		 
 	}
-	shouldComponentUpdate(nextProps, nextState){
-		
-		if(this.state.values !== nextState.values){
-			return true
-		}else{
-		return false
-		}
-	}
+	 
+
+
 	
 	deleteContent(_bId){
 		
-		console.log(_bId);
+		var _values = this.state.values;
 		 $.ajax({ 
 		    	type:"DELETE", 
 		    	url: '/react/delete/'+_bId,
@@ -74,8 +98,12 @@ class Read extends Component {
 		    	success : function()
 		    	{ 
 		    		this.setState({
-		    			isDeleted:'true'
+		    			isDeleted:'true',
+		    			
 		    		});
+		    		_values.splice(_values.indexOf(_bId),1);
+		    		
+		    		
 		    		alert('Delete is completed!!');
 		    	}.bind(this),
 		    	error : function(request,status,error){
@@ -162,7 +190,9 @@ class Read extends Component {
 		
 		
         return(
-        	<div className="read"> 
+        	<div className="read">
+        
+    		{(this.state.isDeleted==='true') && <Redirect to="/react/read"/>}
         	{(this.props.mode ==='update' || this.props.mode ==='delete')&& <h2>{this.props.desc}</h2>}
         	<Card className="post" >
 			  <Card.Header >Postings</Card.Header>

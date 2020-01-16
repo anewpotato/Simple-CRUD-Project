@@ -20,6 +20,9 @@
 #toList{
 	color:blue;
 }
+#delete_button{
+	text-align:center;
+}
 .w_button{
 	margin-right:5px;
 }

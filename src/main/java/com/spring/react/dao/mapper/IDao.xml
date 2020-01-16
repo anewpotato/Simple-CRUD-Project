@@ -10,6 +10,7 @@
 <insert id="writeDao">INSERT INTO MVC_BOARD(BID, BNAME, BTITLE, BCONTENT,BHIT,BGROUP, BSTEP, BINDENT) VALUES (mvc_board_seq.nextval,  #{param1},  #{param2},  #{param3}, 0, mvc_board_seq.currval, 0, 0 ) </insert>
 <update id="upHit">UPDATE MVC_BOARD SET BHIT=BHIT+1 WHERE BID=#{param1}</update>
 <update id="updateDao">UPDATE MVC_BOARD SET BNAME=#{param1} ,BTITLE=#{param2},BCONTENT=#{param3} WHERE BID=#{param4}</update>
+<delete id="deleteDao">DELETE FROM MVC_BOARD WHERE BID = #{param1} </delete>
 
 
 </mapper>

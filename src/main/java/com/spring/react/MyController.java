@@ -90,6 +90,17 @@ public class MyController {
 		       
 		       
 		    }
+		 
+		//삭제할 글의 id값 수신
+		 @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
+		 @ResponseBody
+		    public void deleteContent(@PathVariable("id") final String id) {
+			 IDao dao = sqlSession.getMapper(IDao.class);
+			 dao.deleteDao(id);
+
+		       
+		       
+		    }
 	 
 	 
 	

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.react.dao.IDao;
 import com.spring.react.dto.ContentDto;
+import com.spring.react.dto.ReplyDto;
 
 @Controller
 public class MyController {
@@ -48,10 +49,27 @@ public class MyController {
 	        IDao dao = sqlSession.getMapper(IDao.class);
 	        Map<String, Object> retVal = new HashMap<String, Object>();
 	        ContentDto dto = new ContentDto();
+	        ArrayList<ReplyDto> r_dto = new ArrayList<ReplyDto>();
 	        dao.upHit(id); // 정보를 불러오기 전에 해당 게시글의 조회수를 올려준다.
 	        dto = dao.viewDao(id);
+	        r_dto = dao.r_listDao(id);
 	        
 	        retVal.put("post",dto);
+	        retVal.put("reply",r_dto);
+	       
+	        return retVal;
+	    }
+	 @RequestMapping(value = "/read/reply/{id}", method = RequestMethod.GET) 
+	    public @ResponseBody Object getContentReply(@PathVariable("id") final String id) {
+	        IDao dao = sqlSession.getMapper(IDao.class);
+	        Map<String, Object> retVal = new HashMap<String, Object>();
+	        
+	        ArrayList<ReplyDto> r_dto = new ArrayList<ReplyDto>();
+	       
+	       
+	        r_dto = dao.r_listDao(id);
+	      
+	        retVal.put("reply",r_dto);
 	       
 	        return retVal;
 	    }
@@ -96,9 +114,16 @@ public class MyController {
 		 @ResponseBody
 		    public void deleteContent(@PathVariable("id") final String id) {
 			 IDao dao = sqlSession.getMapper(IDao.class);
-			 dao.deleteDao(id);
-
+			 dao.deleteDao(id);   
 		       
+		    }
+		 
+		 //게시판의 특정 글 정보 요청
+		 @RequestMapping(value = "/create/reply/{id}", method = RequestMethod.POST) 
+		    public @ResponseBody void createReply(@PathVariable("id") final String id,@RequestBody final ReplyDto dto) {
+		        IDao dao = sqlSession.getMapper(IDao.class);
+		        dao.writeReplyDao(dto.getrName(), dto.getrContent(), id);
+		        
 		       
 		    }
 	 

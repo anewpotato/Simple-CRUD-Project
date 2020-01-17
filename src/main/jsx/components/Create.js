@@ -65,8 +65,7 @@ class Create extends Component {
 		 	}
 		}
 	 handleChange() {
-		 console.log(this.state.update);
-		 console.log(this.state.content);
+		
 		 if(this.props.mode==='update'){
 		 this.setState({
 		      
@@ -180,7 +179,7 @@ class Create extends Component {
 			 		 	ref={(input) => { this.writerInput = input; }}
 			 			onChange={() => {this.handleChange()}}
 			 		    placeholder={this.props.mode==='create'?this.state.content.bName : this.state.update.bName}
-			 			defaultValue={this.props.mode==='create'?this.state.content.bName : this.state.update.bName}
+			 			defaultValue={this.props.mode==='create'?'' : this.state.update.bName}
 			 		  />
 			 		 </InputGroup>
 			 		</div>
@@ -195,7 +194,7 @@ class Create extends Component {
 			 			ref={(input) => { this.titleInput = input; }}
 			 			onChange={() => {this.handleChange()}}
 			 		    placeholder={this.props.mode==='create'?this.state.content.bTitle : this.state.update.bTitle}
-			 		defaultValue={this.props.mode==='create'?this.state.content.bTitle : this.state.update.bTitle}	
+			 		defaultValue={this.props.mode==='create'?'' : this.state.update.bTitle}	
 			 		   
 			 		  />
 		 	   </InputGroup>
@@ -209,7 +208,7 @@ class Create extends Component {
 			 	    <FormControl as="textarea" placeholder={this.props.mode==='create'?this.state.content.bContent : this.state.update.bContent}
 			 	    	ref={(input) => { this.contentInput = input; }}
 			 	    	onChange={() => {this.handleChange()}}
-			 	   defaultValue={this.props.mode==='create'?this.state.content.bContent : this.state.update.bContent}
+			 	   defaultValue={this.props.mode==='create'?'' : this.state.update.bContent}
 			 	    	
 			 	    />
 			 	    </InputGroup>

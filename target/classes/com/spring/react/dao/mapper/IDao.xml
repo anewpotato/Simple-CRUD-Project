@@ -5,11 +5,16 @@
 
 <mapper namespace="com.react.dao.IDao">
 
+<select resultType="com.spring.react.dto.ReplyDto" id="r_listDao">SELECT * FROM POSTING_REPLY WHERE RPOSTINGID =#{param1} ORDER BY RID DESC </select>
 <select resultType="com.spring.react.dto.ContentDto" id="listDao">SELECT * FROM MVC_BOARD ORDER BY BID DESC </select>
 <select resultType="com.spring.react.dto.ContentDto" id="viewDao">SELECT * FROM MVC_BOARD WHERE BID= #{param1} </select>
+
 <insert id="writeDao">INSERT INTO MVC_BOARD(BID, BNAME, BTITLE, BCONTENT,BHIT,BGROUP, BSTEP, BINDENT) VALUES (mvc_board_seq.nextval,  #{param1},  #{param2},  #{param3}, 0, mvc_board_seq.currval, 0, 0 ) </insert>
+<insert id="writeReplyDao">INSERT INTO POSTING_REPLY(RID, RNAME, RCONTENT,RPOSTINGID) VALUES (SEQ_ID.nextval,  #{param1},  #{param2},  #{param3}) </insert>
+
 <update id="upHit">UPDATE MVC_BOARD SET BHIT=BHIT+1 WHERE BID=#{param1}</update>
 <update id="updateDao">UPDATE MVC_BOARD SET BNAME=#{param1} ,BTITLE=#{param2},BCONTENT=#{param3} WHERE BID=#{param4}</update>
+
 <delete id="deleteDao">DELETE FROM MVC_BOARD WHERE BID = #{param1} </delete>
 
 

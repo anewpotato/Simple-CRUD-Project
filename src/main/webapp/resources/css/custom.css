@@ -23,8 +23,22 @@
 #delete_button{
 	text-align:center;
 }
+#replyHr{
+	margin-top:0;
+}
 .w_button{
 	margin-right:5px;
+}
+.reply{
+	margin:10px
+}
+.replyDiv{
+	margin:10px;
+	padding-right:200px
+}
+
+.replyBtn{
+	margin-left:10px;
 }
 .content_head{flex:1 5 1 1}
 .content_writer, .content_date, .content_hit{flex:1}

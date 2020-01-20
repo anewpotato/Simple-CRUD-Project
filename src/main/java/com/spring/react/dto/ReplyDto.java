@@ -7,7 +7,16 @@ public class ReplyDto {
 	private String rName;
 	private String rContent;
 	private Timestamp rDate;
+	private String rPw;
 	
+	public String getrPw() {
+		return rPw;
+	}
+
+	public void setrPw(String rPw) {
+		this.rPw = rPw;
+	}
+
 	public ReplyDto() {}
 	
 	public int getrId() {

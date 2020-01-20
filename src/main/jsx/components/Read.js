@@ -6,7 +6,7 @@ import { Card } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
-import { Redirect } from 'react-router-dom';
+
 
 
 class Read extends Component {
@@ -41,7 +41,7 @@ class Read extends Component {
 						});
 		    		
 		    		this.setState({
-		    			values:this.state.values.concat(_values)
+		    			values:_values
 		    		});
 		    	}.bind(this),
 		    	error : function(request,status,error){
@@ -89,7 +89,7 @@ class Read extends Component {
 	
 	deleteContent(_bId){
 		
-		var _values = this.state.values;
+		
 		 $.ajax({ 
 		    	type:"DELETE", 
 		    	url: '/react/delete/'+_bId,
@@ -97,11 +97,27 @@ class Read extends Component {
 		    	cache : false, 
 		    	success : function()
 		    	{ 
+		    		if(this.state.show==='false'){
+		    			this.setState({
+		    				show:'true'
+		    			});
+		    			}else{
+		    				this.setState({
+		    					show:'false'
+		    				});
+		    		}
+		    		if(this.state.isDeleted ==='false'){
 		    		this.setState({
 		    			isDeleted:'true',
 		    			
 		    		});
-		    		_values.splice(_values.indexOf(_bId),1);
+		    		}else if(this.state.isDeleted ==='true'){
+			    		this.setState({
+			    			isDeleted:'false',
+			    			
+			    		});
+			    	}
+		    		
 		    		
 		    		
 		    		alert('Delete is completed!!');
@@ -192,7 +208,7 @@ class Read extends Component {
         return(
         	<div className="read">
         
-    		{(this.state.isDeleted==='true') && <Redirect to="/react/read"/>}
+    		
         	{(this.props.mode ==='update' || this.props.mode ==='delete')&& <h2>{this.props.desc}</h2>}
         	<Card className="post" >
 			  <Card.Header >Postings</Card.Header>

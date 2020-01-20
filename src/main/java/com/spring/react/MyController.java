@@ -43,7 +43,7 @@ public class MyController {
 	       
 	        return retVal;
 	    }
-	 //게시판의 특정 글 정보 요청
+	 //게시판의 특정 글 정보 요청, 최초에 한 번 댓글 리스트 요청
 	 @RequestMapping(value = "/read/{id}", method = RequestMethod.GET) 
 	    public @ResponseBody Object getReadContent(@PathVariable("id") final String id) {
 	        IDao dao = sqlSession.getMapper(IDao.class);
@@ -59,6 +59,9 @@ public class MyController {
 	       
 	        return retVal;
 	    }
+	 
+	 
+	 // 게시판의 특정 글에 속한 댓글 리스트의 별도 요청
 	 @RequestMapping(value = "/read/reply/{id}", method = RequestMethod.GET) 
 	    public @ResponseBody Object getContentReply(@PathVariable("id") final String id) {
 	        IDao dao = sqlSession.getMapper(IDao.class);
@@ -73,7 +76,8 @@ public class MyController {
 	       
 	        return retVal;
 	    }
-	//게시판의 수정을 위한 특정 글 정보 요청
+	 
+	 	//게시판의 수정을 위한 특정 글 정보 요청
 		 @RequestMapping(value = "/update/{id}", method = RequestMethod.GET) 
 		    public @ResponseBody Object getUpdateContent(@PathVariable("id") final String id) {
 		        IDao dao = sqlSession.getMapper(IDao.class);
@@ -87,7 +91,7 @@ public class MyController {
 		    }
 	 
 	 
-	 //게시판에 글 작성 정보 수신
+	 //게시판에 글 작성 정보 수신 후 DB에 추가
 	 @RequestMapping(value = "/create", method = RequestMethod.POST)
 	 @ResponseBody
 	    public void createContent(@RequestBody final ContentDto dto) {
@@ -98,7 +102,7 @@ public class MyController {
 	       
 	    }
 	 
-	 	//게시판에 글 수정 정보 수신
+	 	//게시판에 글 수정 정보 수신 후 DB에 수정
 		 @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
 		 @ResponseBody
 		    public void updateContent(@PathVariable("id") final String id,@RequestBody final ContentDto dto) {
@@ -109,7 +113,7 @@ public class MyController {
 		       
 		    }
 		 
-		//삭제할 글의 id값 수신
+		//삭제할 글의 id값 수신 후 DB에서 삭제
 		 @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
 		 @ResponseBody
 		    public void deleteContent(@PathVariable("id") final String id) {
@@ -118,12 +122,44 @@ public class MyController {
 		       
 		    }
 		 
-		 //게시판의 특정 글 정보 요청
+		 //게시판의 특정 글에 대한 댓글 정보 수신 후 DB에 작성
 		 @RequestMapping(value = "/create/reply/{id}", method = RequestMethod.POST) 
 		    public @ResponseBody void createReply(@PathVariable("id") final String id,@RequestBody final ReplyDto dto) {
 		        IDao dao = sqlSession.getMapper(IDao.class);
-		        dao.writeReplyDao(dto.getrName(), dto.getrContent(), id);
+		        dao.writeReplyDao(dto.getrName(), dto.getrContent(), id,dto.getrPw());
 		        
+		       
+		    }
+		 
+		 // 특정 게시글에서 선택한 댓글의 비밀번호 정보를 전송
+		 @RequestMapping(value = "/reply/getpw/{id}", method = RequestMethod.GET) 
+		    public @ResponseBody Map<String, Object> modifyReply(@PathVariable("id") final String id) {
+		        IDao dao = sqlSession.getMapper(IDao.class);
+		        ReplyDto dto = new ReplyDto();
+		        Map<String, Object> retVal = new HashMap<String, Object>();
+
+		        dto = dao.modifyReplyDao(id);
+		        
+		        retVal.put("pw",dto);
+		        
+		        return retVal;
+		       
+		    }
+		 
+		 // 특정 게시글에서 댓글의 정보를 수정하기 위해 정보를 수신
+		 @RequestMapping(value = "/modify/reply/{id}", method = RequestMethod.PUT) 
+		    public @ResponseBody void modifyReply(@PathVariable("id") final String id,@RequestBody final ReplyDto dto) {
+		        IDao dao = sqlSession.getMapper(IDao.class);
+		        dao.updateReplyDao(dto.getrName(), dto.getrContent(), id);
+		        
+		       
+		    }
+		 
+		 @RequestMapping(value = "/delete/reply/{id}", method = RequestMethod.DELETE)
+		 @ResponseBody
+		    public void deleteReply(@PathVariable("id") final String id) {
+			 IDao dao = sqlSession.getMapper(IDao.class);
+			 dao.deleteReplyDao(id);   
 		       
 		    }
 	 

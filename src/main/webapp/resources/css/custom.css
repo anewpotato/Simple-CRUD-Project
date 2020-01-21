@@ -40,6 +40,10 @@
 .replyBtn{
 	margin-left:10px;
 }
+.page_btn{
+	margin:10px;
+	margin-bottom:50px;
+}
 .content_head{flex:1 5 1 1}
 .content_writer, .content_date, .content_hit{flex:1}
 .content_title{flex:5}

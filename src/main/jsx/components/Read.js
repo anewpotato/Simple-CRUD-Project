@@ -6,8 +6,8 @@ import { Card } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
-
-
+import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
+import ButtonGroup from 'react-bootstrap/ButtonGroup'
 
 class Read extends Component {
 	constructor(props) {
@@ -17,14 +17,16 @@ class Read extends Component {
 	    	values:[],
 	    	show:'false',
 	    	selectedItem:null,
-	    	isDeleted:'false'
+	    	isDeleted:'false',
+	    	selectPage:1,
+	    	priviousPage:0
 	    };
 	    
 	    
 	}
 
 	shouldComponentUpdate(nextProps,nextState){
-		if(this.state.isDeleted !== nextState.isDeleted){
+		if(this.state.isDeleted !== nextState.isDeleted || this.state.selectedPage !== nextState.selectedPage){
 		var _values=[];
 		 $.ajax({ 
 		    	type:"GET", 
@@ -147,7 +149,47 @@ class Read extends Component {
 			});
 		}
 	}
-	
+	handlePage(e){
+		console.log(this.state.selectPage -1);
+		if(parseInt(e.target.value) ===1){
+			this.setState({
+				priviousPage:0,
+				selectPage:parseInt(e.target.value)
+			});
+		}else{
+		this.setState({
+			selectPage:parseInt(e.target.value),
+			priviousPage:parseInt(e.target.value) -1
+			
+		});
+		}
+	}
+	getPageNum=()=>{
+		var _com =<Button variant="outline-info" onClick={(e)=>{this.handlePage(e)}} value={1} >1</Button>;
+		if(this.state.values.length <= 10){
+			
+			return _com;
+		}else{
+			var i =0;
+			var num =2;
+			while(i<parseInt(this.state.values.length/10)){
+				if(this.state.values.length % 10 ===0 ){
+					i++;
+				}
+				_com = <span>{_com} <Button variant="outline-info" onClick={(e)=>{this.handlePage(e)}} value={num}>{num}</Button></span>;
+				i++;
+				if(i===parseInt(this.state.values.length/10)){ break;}
+				num++;
+			}
+			
+			
+			
+		}
+		
+		
+		
+		return _com;
+	}
 	
 	
 	render() {
@@ -156,7 +198,10 @@ class Read extends Component {
 				  														
 																		  
 																		<div key={_index}>
-				  														<ListGroup horizontal  >
+																		
+																		
+																		{((_index < (10*this.state.selectPage))&&((this.state.priviousPage*10)<=_index))&&
+				  														<ListGroup horizontal>
 		  																<ListGroup.Item className="content_writer">{_content.bName}</ListGroup.Item>
 		  																{this.props.mode==='read'&&<LinkContainer to={`/react/read/${_content.bId}`}>
 		  																<ListGroup.Item className="content_title"><a href="/" >{_content.bTitle}</a></ListGroup.Item>
@@ -177,7 +222,7 @@ class Read extends Component {
 		  																<ListGroup.Item className="content_date">{_content.bDate}</ListGroup.Item>
 		  																<ListGroup.Item className="content_hit">{_content.bHit}</ListGroup.Item>
 		  																</ListGroup>
-		  																
+																		}
 		  																 {(this.props.mode==='delete'&&this.state.show==='true'&& _index ===this.state.selectedItem._index) && 
 		  																	 
 		  																<Alert variant="warning">
@@ -193,9 +238,10 @@ class Read extends Component {
 		  													          </Button>
 		  													            
 		  													            </div>
-		  													           </Alert>
+		  													           </Alert>}
 		  													         
-		  													           }
+		  																 
+																		
 		  																</div>
 		  																
 		  																));
@@ -222,7 +268,13 @@ class Read extends Component {
         	 {contentList}
         	 
         	{this.props.mode ==='read' && <h2>{this.props.desc}</h2>}
-        	
+        	<ButtonToolbar>
+        	  <ButtonGroup className="page_btn" >
+        	  <div>
+        	    {this.getPageNum()}
+        	  </div>
+        	  </ButtonGroup>
+        	</ButtonToolbar>
         		
         	</div>
         );

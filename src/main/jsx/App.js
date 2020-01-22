@@ -8,7 +8,15 @@ import '../webapp/resources/css/custom.css';
 
 class App extends Component{
 	 
-	
+	constructor(props) {
+	    super(props);
+	   
+	    this.state = {
+	    	admin:{id:'',pw:''}
+	    };
+	    
+	    
+	}
 	 
 	 
 	render(){

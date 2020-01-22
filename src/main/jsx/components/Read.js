@@ -4,6 +4,10 @@ import ReactDOM from 'react-dom';
 import { ListGroup } from 'react-bootstrap';
 import { Card } from 'react-bootstrap';
 import { LinkContainer } from 'react-router-bootstrap';
+import { Form } from 'react-bootstrap';
+import { FormControl } from 'react-bootstrap';
+import { InputGroup } from 'react-bootstrap';
+
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
 import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
@@ -19,7 +23,8 @@ class Read extends Component {
 	    	selectedItem:null,
 	    	isDeleted:'false',
 	    	selectPage:1,
-	    	priviousPage:0
+	    	priviousPage:0,
+	    	search:{title:''}
 	    };
 	    
 	    
@@ -184,13 +189,22 @@ class Read extends Component {
 			
 			
 			
-		}
-		
-		
-		
+		}				
 		return _com;
 	}
+	handleValueChange(e) {
+		
+		this.setState({
+			search:{
+				title:e.target.value
+			}
+		});
+		
+	}
 	
+
+
+
 	
 	render() {
 		
@@ -199,8 +213,7 @@ class Read extends Component {
 																		  
 																		<div key={_index}>
 																		
-																		
-																		{((_index < (10*this.state.selectPage))&&((this.state.priviousPage*10)<=_index))&&
+																		{this.state.search.title ===''?((_index < (10*this.state.selectPage))&&((this.state.priviousPage*10)<=_index))&&
 				  														<ListGroup horizontal>
 		  																<ListGroup.Item className="content_writer">{_content.bName}</ListGroup.Item>
 		  																{this.props.mode==='read'&&<LinkContainer to={`/react/read/${_content.bId}`}>
@@ -216,13 +229,29 @@ class Read extends Component {
 		  												                }}>{_content.bTitle}</a></ListGroup.Item>
 		  																
 		  																}
-		  																
-		  																 
-		  																
 		  																<ListGroup.Item className="content_date">{_content.bDate}</ListGroup.Item>
 		  																<ListGroup.Item className="content_hit">{_content.bHit}</ListGroup.Item>
-		  																</ListGroup>
+		  																</ListGroup> : 
+		  																	this.state.values[_index].bTitle.indexOf(this.state.search.title)>-1 && <ListGroup horizontal>
+		  																<ListGroup.Item className="content_writer">{_content.bName}</ListGroup.Item>
+		  																{this.props.mode==='read'&&<LinkContainer to={`/react/read/${_content.bId}`}>
+		  																<ListGroup.Item className="content_title"><a href="/" >{_content.bTitle}</a></ListGroup.Item>
+		  																</LinkContainer>
+		  																}
+		  																{this.props.mode==='update'&&<LinkContainer to={`/react/update/${_content.bId}`}>
+		  																<ListGroup.Item className="content_title"><a href="/" >{_content.bTitle}</a></ListGroup.Item>
+		  																</LinkContainer>
+		  																}
+		  																{this.props.mode==='delete'&&
+		  																<ListGroup.Item className="content_title"><a href="/" onClick={(e) => {e.preventDefault();this.setShow({_index})  
+		  												                }}>{_content.bTitle}</a></ListGroup.Item>
+		  																
+		  																}
+		  																<ListGroup.Item className="content_date">{_content.bDate}</ListGroup.Item>
+		  																<ListGroup.Item className="content_hit">{_content.bHit}</ListGroup.Item>
+		  																</ListGroup> 
 																		}
+																		
 		  																 {(this.props.mode==='delete'&&this.state.show==='true'&& _index ===this.state.selectedItem._index) && 
 		  																	 
 		  																<Alert variant="warning">
@@ -268,6 +297,15 @@ class Read extends Component {
         	 {contentList}
         	 
         	{this.props.mode ==='read' && <h2>{this.props.desc}</h2>}
+        	
+        	<Form inline style={{paddingLeft:'40%'}}>
+        	<InputGroup.Prepend>
+            <InputGroup.Text>Search</InputGroup.Text>
+            </InputGroup.Prepend>
+            <FormControl onChange={(e)=>{this.handleValueChange(e)}}type="text" placeholder="Searching by title of posting" className="mr-sm-2" />
+            
+            </Form>
+           
         	<ButtonToolbar>
         	  <ButtonGroup className="page_btn" >
         	  <div>

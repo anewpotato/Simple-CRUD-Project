@@ -19,13 +19,20 @@ class Article extends Component {
 	      read:{desc:'No more postings!!'},
 	      create:{desc:'Write a posting'},
 	      update:{desc:'Choose title of a posting that you want to update',update:'Modify your posting!'},
-	      delete:{desc:'Choose title of a posting that you want to delete'}
+	      delete:{desc:'Choose title of a posting that you want to delete'},
+	      isLogin:''
 	      
 	    };
 	  }
 	
 	
-	
+	parentCallback=(dataFromChild)=>{
+        // 자식 컴포넌트에서 받은 값을 이용한 로직 처리
+        this.setState({
+            isLogin: dataFromChild
+        });
+        console.log(this.state.isLogin);
+    }
 	
 	
 	render() {
@@ -40,7 +47,7 @@ class Article extends Component {
         	<Selector></Selector>
         	
 			<Switch>
-				<Route exact path = "/react/index" render={ props => <Home desc={this.state.welcome.desc}/>}/>
+				<Route exact path = "/react/index" render={ props => <Home callbackFromParent={this.parentCallback} desc={this.state.welcome.desc}/>}/>
 				<Route exact path="/react/create" render={ props => <Create desc={this.state.create.desc} mode={'create'} />}/>	
 				<Route exact path="/react/read" render={ props => <Read desc={this.state.read.desc} mode={'read'} />}/>
 				<Route exact path="/react/read/:bId" component={Posting}/>

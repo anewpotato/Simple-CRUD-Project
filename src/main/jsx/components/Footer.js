@@ -5,7 +5,7 @@ class Footer extends Component {
 	render() {
         return(
         	<div className="footer"> 
-        		© Made by Yu SeungJong.
+        		© Made by Yu SeungJong
         	</div>
         );
     }

@@ -154,7 +154,7 @@ class Posting extends Component {
 				 delete_reply:e.target.value
 			 });
 		 
-			console.log(this.state.delete_reply);
+			
 	 }
 	 
 	 sendReply(){

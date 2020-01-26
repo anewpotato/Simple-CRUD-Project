@@ -16,7 +16,7 @@ class Selector extends Component {
 		
 		
 	
-		render() {
+		render(history) {
 			return(
 					<nav className="selector"> 
 					
@@ -33,6 +33,7 @@ class Selector extends Component {
 				         
 				         <LinkContainer to="/react/read" >  
 				            <ToggleButton 
+				            
 				            type="radio" name="read" value="2" variant="secondary">
 				              Read
 				            </ToggleButton>

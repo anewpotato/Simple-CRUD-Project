@@ -28,6 +28,9 @@ class Create extends Component {
 	     };
 	  }
 	 componentDidMount(){
+		
+		 
+	 
 		 	if(this.props.mode==='update'){
 			var _value = null;
 			var _bId = this.props.match.params.bId;
@@ -167,6 +170,9 @@ class Create extends Component {
 	render() {
         return(
         	<div className="create">
+        		
+        		{this.props.auth ==='' && (alert('Please select your Identity!!'),<Redirect to="/react/index"/>)}
+        		{this.props.auth ==='visitor' && (alert('You have no authority!'),<Redirect to="/react/index"/>)}
         		{(this.state.isCreated ==='true'||this.state.isModify==='true') && <Redirect to="/react/read"/>}
         		<h2>{this.props.desc}</h2>
 				<div id="writer">

@@ -6,8 +6,10 @@ import Create from './Create';
 import Home from './Home';
 import Read from './Read';
 import Posting from './Posting';
+import { Redirect } from 'react-router-dom';
 
-import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch  } from 'react-router-dom';
+
 
 
 
@@ -27,11 +29,9 @@ class Article extends Component {
 	
 	
 	parentCallback=(dataFromChild)=>{
-        // 자식 컴포넌트에서 받은 값을 이용한 로직 처리
         this.setState({
             isLogin: dataFromChild
-        });
-        console.log(this.state.isLogin);
+        });     
     }
 	
 	
@@ -48,12 +48,12 @@ class Article extends Component {
         	
 			<Switch>
 				<Route exact path = "/react/index" render={ props => <Home callbackFromParent={this.parentCallback} desc={this.state.welcome.desc}/>}/>
-				<Route exact path="/react/create" render={ props => <Create desc={this.state.create.desc} mode={'create'} />}/>	
-				<Route exact path="/react/read" render={ props => <Read desc={this.state.read.desc} mode={'read'} />}/>
+				<Route exact path="/react/create" render={ props => <Create auth={this.state.isLogin} desc={this.state.create.desc} mode={'create'} />}/>	
+				<Route exact path="/react/read" render={ props => <Read auth={this.state.isLogin} desc={this.state.read.desc} mode={'read'} />}/>
 				<Route exact path="/react/read/:bId" component={Posting}/>
 				<Route exact path="/react/update/:bId" render={ (props) => <Create desc={this.state.update.update} mode={'update'} {...props}/>}/>
-				<Route exact path="/react/update" render={ props => <Read desc={this.state.update.desc}  mode={'update'} />}/>
-				<Route exact path="/react/delete" render={ props => <Read desc={this.state.delete.desc}  mode={'delete'}/>}/>
+				<Route exact path="/react/update" render={ props => <Read auth={this.state.isLogin} desc={this.state.update.desc}  mode={'update'} />}/>
+				<Route exact path="/react/delete" render={ props => <Read auth={this.state.isLogin} desc={this.state.delete.desc}  mode={'delete'}/>}/>
 				
 		    </Switch>
 			

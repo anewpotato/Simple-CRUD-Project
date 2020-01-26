@@ -7,6 +7,7 @@ import { LinkContainer } from 'react-router-bootstrap';
 import { Form } from 'react-bootstrap';
 import { FormControl } from 'react-bootstrap';
 import { InputGroup } from 'react-bootstrap';
+import { Redirect } from 'react-router-dom';
 
 import Alert from 'react-bootstrap/Alert';
 import Button from 'react-bootstrap/Button';
@@ -52,7 +53,7 @@ class Read extends Component {
 		    		});
 		    	}.bind(this),
 		    	error : function(request,status,error){
-//		    		 alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
+		    		 alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
 		    		 alert('Can\'t call data of board');
 		    	}
 		    });
@@ -62,7 +63,10 @@ class Read extends Component {
 	}
 	
 	componentDidMount(){
+		
+		
 		var _values=[];
+		if(this.props.auth==='admin' || (this.props.auth==='visitor' && this.props.mode==='read')){
 		 $.ajax({ 
 		    	type:"GET", 
 		    	url: '/react/read',
@@ -82,10 +86,11 @@ class Read extends Component {
 		    		});
 		    	}.bind(this),
 		    	error : function(request,status,error){
-//		    		 alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
+		    		 alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
 		    		 alert('Can\'t call data of board');
 		    	}
 		    });
+		}
 		
 		 
 		 
@@ -280,10 +285,15 @@ class Read extends Component {
 		
 		
 		
+		  window.onbeforeunload =(e) => {
+			  console.log('aaaa');
+		  
+			  <Redirect to="/react/index"/>;
+			}
         return(
         	<div className="read">
-        
-    		
+    		{this.props.auth ==='' && (alert('Please select your Identity!!'),<Redirect to="/react/index"/>)}
+    		{(this.props.auth ==='visitor' && (this.props.mode==='delete' || this.props.mode==='update'))&& (alert('You have no authority!'),<Redirect to="/react/index"/>)}
         	{(this.props.mode ==='update' || this.props.mode ==='delete')&& <h2>{this.props.desc}</h2>}
         	<Card className="post" >
 			  <Card.Header >Postings</Card.Header>

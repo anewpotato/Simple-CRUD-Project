@@ -13,12 +13,69 @@ import { FormControl } from 'react-bootstrap';
 
 class Home extends Component {
 
-	handleLogin=(e)=>{
-		e.preventDefault();
-		this.props.callbackFromParent(e.target.value);
-		
+	constructor(props){
+	    super(props);
+	    this.state = {
+	      login:{
+	    	  id:'',
+	    	  pw:'',
+	    	  isPassed:'false'
+	      },
+	      adminInfo:{
+	    	  id:'',
+	    	  pw:''
+	      }
+	    };
+	  }
+	
+	componentDidMount(){
+		$.ajax({ 
+	    	type:"GET", 
+	    	url: '/react/login',
+	    	dataType: "json", 
+	    	cache : false, 
+	    	success : function(resData)
+	    	{ 
+	    		this.setState({
+	    			adminInfo:{
+	    				id:resData.id,
+	    				pw:resData.pw
+	    			}
+	    		});
+	    		
+	    	}.bind(this),
+	    	
+	    });
+	}
+	
+	handleChange = (input) => (e) =>{
+		this.setState({		      
+			login:{
+				 ...this.state.login,
+				 [input]:e.target.value
+   		      }
+		 });
 		
 	}
+	getAdminInfo(){
+		
+		
+		if(this.state.login.id === this.state.adminInfo.id && this.state.login.pw === this.state.adminInfo.pw )
+		{
+			
+			this.props.callbackFromParent('admin');
+			this.setState({
+				login:{
+					isPassed:'true'
+				}
+			});
+			alert('Login Success!');
+		}else{
+			alert('Faild to Login!');
+		}
+	
+	}
+	
 	render() {
         return(
         	<div className="home"> 
@@ -37,15 +94,15 @@ class Home extends Component {
 				  <Card bg="light">
 				    <Card.Header>
 				    <span className="home_btn">
-				      <Accordion.Toggle as={Button} variant="outline-primary" size ="lg" eventKey="1" onClick={this.handleLogin} value="admin">
+				      <Accordion.Toggle as={Button} variant="outline-primary" size ="lg" eventKey="1"  value="admin">
 				      	Admin
 				      </Accordion.Toggle>
 				    </span>
 				      <span className="home_btn">
-		      		    <Button variant="outline-primary" size="lg" onClick={this.handleLogin} value="visitor">Visitor</Button>
+				      <Accordion.Toggle as={Button} variant="outline-primary" size="lg" value="visitor" eventKey="2" onClick={()=>{this.props.callbackFromParent('visitor')}}>Visitor</Accordion.Toggle>
 		      		  </span>
 				    </Card.Header>
-        		    <Accordion.Collapse eventKey="1">
+        		    <Accordion.Collapse eventKey={this.state.login.isPassed === 'false'? "1" : "0"}>
 				     <Card.Body>
 				     <div >
 					    
@@ -56,7 +113,7 @@ class Home extends Component {
 					 		</InputGroup.Prepend>
 					 		<FormControl
 					 			
-					 			
+					 			onChange={this.handleChange("id")}
 					 			placeholder = 'Write your ID'
 					 		  />
 					 		 </InputGroup>
@@ -67,14 +124,20 @@ class Home extends Component {
 					 		</InputGroup.Prepend>
 					 		<FormControl
 					 			type="password"
-					 			
+					 			onChange={this.handleChange("pw")}
 					 			placeholder = 'Write your Password'
 					 		  />
 					 		 </InputGroup>
 					 		<div style={{marginTop:"10px"}}>
-					 		<Button variant="primary">Login</Button>
+					 		<Button variant="primary" onClick={()=>{this.getAdminInfo()}}>Login</Button>
 					 		</div>
 					    </div>
+				     </Card.Body>	
+				    </Accordion.Collapse>
+				    <Accordion.Collapse eventKey="2">
+				     <Card.Body>
+				     	<h3>Welcome, visitor!</h3>
+					    
 				     </Card.Body>	
 				    </Accordion.Collapse>
 				    </Card>

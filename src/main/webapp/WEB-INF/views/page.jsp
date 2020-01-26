@@ -9,8 +9,8 @@
  
 <body >
     <div id="root" style="width:100%;height:100%"></div>
-   	<script src="resources/js/react/index.bundle.js"></script>
-   
+   	<script src="resources/js/react/index.bundle.js"> </script>
+   	
     
 </body>
 </html>

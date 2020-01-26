@@ -53,5 +53,32 @@
 <beans:constructor-arg ref="sqlSessionFactory" index="0"/>
 </beans:bean>
 
+<beans:bean class="com.spring.react.dto.AdminDto" id="adminInfo">
+
+<beans:property name="id" value="fbtmdwhd33"/>
+
+<beans:property name="pw" value="0681"/>
+
+</beans:bean>
+<mvc:interceptors>
+
+         <mvc:interceptor>
+
+                  <mvc:mapping path="/read" />
+                  <mvc:mapping path="/update" />
+                  <mvc:mapping path="/create" />
+                  <mvc:mapping path="/delete" />
+                  <mvc:mapping path="/login" />    
+				  <mvc:mapping path="/read/**" />
+				  <mvc:mapping path="/update/**" />
+				  <mvc:mapping path="/delete/**" /> 
+				  <mvc:mapping path="/create/**" /> 
+				  <mvc:mapping path="/reply/**" />
+				  <mvc:mapping path="/modify/**" />    	
+                  <beans:bean class="com.spring.react.interceptor.MyInterceptor" />
+
+         </mvc:interceptor>
+
+</mvc:interceptors>
 	
 </beans:beans>

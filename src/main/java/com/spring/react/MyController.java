@@ -1,12 +1,10 @@
 package com.spring.react;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.ibatis.session.SqlSession;
@@ -48,24 +46,17 @@ public class MyController  {
 	
 	//게시판 글 목록 요청
 	 @RequestMapping(value = "/read", method = RequestMethod.GET) 
-	    public @ResponseBody Object getReadContents(HttpServletRequest request, HttpServletResponse response) throws IOException {
+	    public @ResponseBody Object getReadContents() {
 		 	
 
-		 	HttpSession session = request.getSession();
 		 	
-		 	if(session == null || session.getAttribute("read_jud")==null) {
-		 	session.setAttribute("read_jud", "true");
 	        IDao dao = sqlSession.getMapper(IDao.class);
 	        Map<String, Object> retVal = new HashMap<String, Object>();
 	        ArrayList<ContentDto> list = new ArrayList<ContentDto>();
 	        list = dao.listDao();
 	        retVal.put("contents",list);
 	        return retVal;
-		 	}else {
-		 		session.removeAttribute("read_jud");
-		 		response.sendRedirect(request.getContextPath()+"/index");
-		 		return null;
-		 	}
+		 	
 	        
 	        
 	    }
@@ -73,11 +64,8 @@ public class MyController  {
 	
 	 //게시판의 특정 글 정보 요청, 최초에 한 번 댓글 리스트 요청
 	 @RequestMapping(value = "/read/{id}", method = RequestMethod.GET) 
-	    public @ResponseBody Object getReadContent(@PathVariable("id") final String id,HttpServletRequest request, HttpServletResponse response) throws IOException {
-		 	HttpSession session = request.getSession();
+	    public @ResponseBody Object getReadContent(@PathVariable("id") final String id) {
 		 	
-		 	if(session == null || session.getAttribute("read_jud")==null){ 
-		 	session.setAttribute("read_jud", "true");
 		 	IDao dao = sqlSession.getMapper(IDao.class);
 	        Map<String, Object> retVal = new HashMap<String, Object>();
 	        ContentDto dto = new ContentDto();
@@ -90,22 +78,15 @@ public class MyController  {
 	        retVal.put("reply",r_dto);
 	       
 	        return retVal;
-		 	}else {
-		 		session.removeAttribute("read_jud");
-		 		response.sendRedirect(request.getContextPath()+"/index");
-		 		return null;
-		 	}
+		 	
 	    }
 	 
 	 
 	 // 게시판의 특정 글에 속한 댓글 리스트의 별도 요청
 	 @RequestMapping(value = "/read/reply/{id}", method = RequestMethod.GET) 
-	    public @ResponseBody Object getContentReply(@PathVariable("id") final String id,HttpServletRequest request, HttpServletResponse response) throws IOException {
+	    public @ResponseBody Object getContentReply(@PathVariable("id") final String id){
 	        
-		 	HttpSession session = request.getSession();
-		 	
-		 	if(session == null || session.getAttribute("read_jud")==null){ 
-		 	session.setAttribute("read_jud", "true");
+		 	 
 		 	IDao dao = sqlSession.getMapper(IDao.class);
 	        Map<String, Object> retVal = new HashMap<String, Object>();
 	        
@@ -117,19 +98,13 @@ public class MyController  {
 	        retVal.put("reply",r_dto);
 	       
 	        return retVal;
-		 	}else {
-		 		session.removeAttribute("read_jud");
-		 		response.sendRedirect(request.getContextPath()+"/index");
-		 		return null;
-		 	}
+		 	
 	    }
 	 
 	 	//게시판의 수정을 위한 특정 글 정보 요청
 		 @RequestMapping(value = "/update/{id}", method = RequestMethod.GET) 
-		    public @ResponseBody Object getUpdateContent(@PathVariable("id") final String id,HttpServletRequest request, HttpServletResponse response) throws IOException{
-			 	HttpSession session = request.getSession();
+		    public @ResponseBody Object getUpdateContent(@PathVariable("id") final String id){
 			 	
-			 	if(session == null || session.getAttribute("read_jud")==null){
 			 	IDao dao = sqlSession.getMapper(IDao.class);
 		        Map<String, Object> retVal = new HashMap<String, Object>();
 		        ContentDto dto = new ContentDto();
@@ -138,27 +113,19 @@ public class MyController  {
 		        retVal.put("post",dto);
 		       
 		        return retVal;
-			 	}else {
-			 		session.removeAttribute("read_jud");
-			 		response.sendRedirect(request.getContextPath()+"/index");
-			 		return null;
-			 	}
+			 	
 		    }
 	 
 	 
 	 //게시판에 글 작성 정보 수신 후 DB에 추가
 	 @RequestMapping(value = "/create", method = RequestMethod.POST)
 	 @ResponseBody
-	    public void createContent(@RequestBody final ContentDto dto,HttpServletRequest request, HttpServletResponse response) throws IOException{
-		 HttpSession session = request.getSession();
-		 	
-		 if(session == null || session.getAttribute("read_jud")==null){
-		 IDao dao = sqlSession.getMapper(IDao.class);
-		 dao.writeDao(dto.getbName(),dto.getbTitle(),dto.getbContent());
-		 }else {
-		 		session.removeAttribute("read_jud");
-		 		response.sendRedirect(request.getContextPath()+"/index");
-		 }
+	    public void createContent(@RequestBody final ContentDto dto){
+		  
+
+			IDao dao = sqlSession.getMapper(IDao.class);
+			dao.writeDao(dto.getbName(),dto.getbTitle(),dto.getbContent());
+		 
 	       
 	       
 	    }
@@ -166,16 +133,11 @@ public class MyController  {
 	 	//게시판에 글 수정 정보 수신 후 DB에 수정
 		 @RequestMapping(value = "/update/{id}", method = RequestMethod.PUT)
 		 @ResponseBody
-		    public void updateContent(@PathVariable("id") final String id,@RequestBody final ContentDto dto,HttpServletRequest request, HttpServletResponse response) throws IOException{
-			 HttpSession session = request.getSession();
-			 	
-			 if(session == null || session.getAttribute("read_jud")==null){
-			 IDao dao = sqlSession.getMapper(IDao.class);
-			 dao.updateDao(dto.getbName(),dto.getbTitle(),dto.getbContent(),id);
-			 }else {
-			 		session.removeAttribute("read_jud");
-			 		response.sendRedirect(request.getContextPath()+"/index");
-			 }
+		    public void updateContent(@PathVariable("id") final String id,@RequestBody final ContentDto dto){
+			 
+				 IDao dao = sqlSession.getMapper(IDao.class);
+				 dao.updateDao(dto.getbName(),dto.getbTitle(),dto.getbContent(),id);
+			 
 		       
 		       
 		    }
@@ -183,97 +145,66 @@ public class MyController  {
 		//삭제할 글의 id값 수신 후 DB에서 삭제
 		 @RequestMapping(value = "/delete/{id}", method = RequestMethod.DELETE)
 		 @ResponseBody
-		    public void deleteContent(@PathVariable("id") final String id,HttpServletRequest request, HttpServletResponse response) throws IOException{
-			 HttpSession session = request.getSession();
-			 	
-			 if(session == null || session.getAttribute("read_jud")==null){
-			 IDao dao = sqlSession.getMapper(IDao.class);
-			 dao.deleteDao(id);   
-			 }else {
-			 		session.removeAttribute("read_jud");
-			 		response.sendRedirect(request.getContextPath()+"/index");
-			 }
-		       
+		    public void deleteContent(@PathVariable("id") final String id){
+			 
+				 IDao dao = sqlSession.getMapper(IDao.class);
+				 dao.deleteDao(id);   
+			
 		    }
 		 
 		 //게시판의 특정 글에 대한 댓글 정보 수신 후 DB에 작성
 		 @RequestMapping(value = "/create/reply/{id}", method = RequestMethod.POST) 
-		    public @ResponseBody void createReply(@PathVariable("id") final String id,@RequestBody final ReplyDto dto,HttpServletRequest request, HttpServletResponse response) throws IOException{
-			 	HttpSession session = request.getSession();
+		    public @ResponseBody void createReply(@PathVariable("id") final String id,@RequestBody final ReplyDto dto){
 			 	
-			 	if(session == null || session.getAttribute("read_jud")==null){
-			 	IDao dao = sqlSession.getMapper(IDao.class);
-		        dao.writeReplyDao(dto.getrName(), dto.getrContent(), id,dto.getrPw());
-			 	}else {
-			 		session.removeAttribute("read_jud");
-			 		response.sendRedirect(request.getContextPath()+"/index");
-			 }
+			 		IDao dao = sqlSession.getMapper(IDao.class);
+			 		dao.writeReplyDao(dto.getrName(), dto.getrContent(), id,dto.getrPw());
+			 	
 		       
 		    }
 		 
 		 // 특정 게시글에서 선택한 댓글의 비밀번호 정보를 전송
 		 @RequestMapping(value = "/reply/getpw/{id}", method = RequestMethod.GET) 
-		    public @ResponseBody Map<String, Object> modifyReply(@PathVariable("id") final String id,HttpServletRequest request, HttpServletResponse response) throws IOException{
-			 	HttpSession session = request.getSession();
-			 	
-			 	if(session == null || session.getAttribute("read_jud")==null){
-			 	IDao dao = sqlSession.getMapper(IDao.class);
-		        ReplyDto dto = new ReplyDto();
-		        Map<String, Object> retVal = new HashMap<String, Object>();
+		    public @ResponseBody Map<String, Object> modifyReply(@PathVariable("id") final String id){
+			 	 
 
-		        dto = dao.modifyReplyDao(id);
+			 		IDao dao = sqlSession.getMapper(IDao.class);
+			 		ReplyDto dto = new ReplyDto();
+			 		Map<String, Object> retVal = new HashMap<String, Object>();
+
+			 		dto = dao.modifyReplyDao(id);
 		        
-		        retVal.put("pw",dto);
+			 		retVal.put("pw",dto);
 		        
-		        return retVal;
-			 	}else {
-			 		session.removeAttribute("read_jud");
-			 		response.sendRedirect(request.getContextPath()+"/index");
-			 		return null;
-			 }
+			 		return retVal;
+			 	
 		       
 		    }
 		 
 		 // 특정 게시글에서 댓글의 정보를 수정하기 위해 정보를 수신
 		 @RequestMapping(value = "/modify/reply/{id}", method = RequestMethod.PUT) 
-		    public @ResponseBody void modifyReply(@PathVariable("id") final String id,@RequestBody final ReplyDto dto,HttpServletRequest request, HttpServletResponse response) throws IOException{
-			 	HttpSession session = request.getSession();
+		    public @ResponseBody void modifyReply(@PathVariable("id") final String id,@RequestBody final ReplyDto dto){
 			 	
-			 	if(session == null || session.getAttribute("read_jud")==null){
-			 	IDao dao = sqlSession.getMapper(IDao.class);
-		        dao.updateReplyDao(dto.getrName(), dto.getrContent(), id);
-			 	}else {
-			 		session.removeAttribute("read_jud");
-			 		response.sendRedirect(request.getContextPath()+"/index");
-			 }
+			 		IDao dao = sqlSession.getMapper(IDao.class);
+			 		dao.updateReplyDao(dto.getrName(), dto.getrContent(), id);
+			 	
 		       
 		    }
 		 
 		 @RequestMapping(value = "/delete/reply/{id}", method = RequestMethod.DELETE)
 		 @ResponseBody
-		    public void deleteReply(@PathVariable("id") final String id,HttpServletRequest request, HttpServletResponse response) throws IOException{
-			 HttpSession session = request.getSession();
-			 	
-			 if(session == null || session.getAttribute("read_jud")==null){
+		    public void deleteReply(@PathVariable("id") final String id){
 			 
 			 IDao dao = sqlSession.getMapper(IDao.class);
 			 dao.deleteReplyDao(id);
-			 }else {
-			 		session.removeAttribute("read_jud");
-			 		response.sendRedirect(request.getContextPath()+"/index");
-			 }
+			 
 		       
 		 }
 
 		 
 		 @RequestMapping(value = "/login", method = RequestMethod.GET)
 		 @ResponseBody
-		    public Map<String, Object> getLogin(HttpServletRequest request, HttpServletResponse response) throws IOException{
-			 	HttpSession session = request.getSession();
+		    public Map<String, Object> getLogin() {
 			 	
-			 	if(session == null || session.getAttribute("read_jud")==null){
-			 
-			 
 			 	String id = admin.getId();
 			 	String pw = admin.getPw();
 			 	
@@ -284,11 +215,7 @@ public class MyController  {
 		        
 		        
 		        return retVal;
-			 	}else {
-			 		session.removeAttribute("read_jud");
-			 		response.sendRedirect(request.getContextPath()+"/index");
-			 		return null;
-			 	}
+			 	
 	
 		    }
 	 

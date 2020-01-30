@@ -1,10 +1,23 @@
 # Simple-CRUD-Project
+![mainPage](./images/mainPage.PNG)
+
+## 목차
+* 들어가며
+  1. 프로젝트 소개
+  2. 개발 환경
+
+* Front-End
+  1. 사용기술
+  2. 화면구성
+* Back-End
+  1. 사용기술
+  2. DataBase 테이블 설계
+  
+## 들어가며
+  1. 프로젝트 소개<br/><br/>
+    &nbsp;&nbsp;본 프로젝트를 시작하게 된 계기는 많은 분들이 이야기 하시는 웹 프로그래밍의 기본 소양이라 할 수 있는 기본적인 기능인 CRUD를 이용한 게시판을 만들어 보고자 하여서 시작하게 되었습니다. 처음 프로젝트를 구상할 때는 정말 단순한 게시판의 형태로 만들고자 해서 개발기간이 얼마 걸리지 않을 것이라 예상했는데, 개발을 해 나갈수록 아쉬운 부분이 많이 생겨 기능을 추가하고 수정하는 등의 작업을 거치다 보니 시간이 조금 더 걸리게 되었습니다.     
+  그
 
 
 
-Backend : Spring Framework
-Frontend : React
 
-This Remote Repository is my Template for whole projects.
-
-react router ref :https://qvil.github.io/react/react-router-v4/

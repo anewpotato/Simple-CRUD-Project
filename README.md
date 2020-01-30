@@ -1,4 +1,6 @@
-# Spring_React_Template
+# Simple-CRUD-Project
+
+
 
 Backend : Spring Framework
 Frontend : React

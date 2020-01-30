@@ -33,9 +33,6 @@ module.exports = {
         } ]
     },
     devServer: {
-        inline: true,
-        port: 8181,
-        contentBase: "./src/main/webapp/WEB-INF/views/page.jsp",
         historyApiFallback: true
       }
     

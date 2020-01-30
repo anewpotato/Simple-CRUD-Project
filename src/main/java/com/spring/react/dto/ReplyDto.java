@@ -2,7 +2,7 @@ package com.spring.react.dto;
 
 import java.sql.Timestamp;
 
-public class ReplyDto {
+public class ReplyDto { // 댓글 정보를 저장하는 커맨드 객체
 	private int rId;
 	private String rName;
 	private String rContent;

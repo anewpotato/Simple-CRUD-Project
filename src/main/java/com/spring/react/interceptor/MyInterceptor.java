@@ -15,8 +15,9 @@ public class MyInterceptor implements HandlerInterceptor {
 		// TODO Auto-generated method stub
 		HttpSession session = request.getSession();
 
-
+		// index 페이지에 방문하여 session이 생성되지 않았을 경우
 		if(session == null || session.getAttribute("jud")==null) {
+			// index 페이지로 redirection 시킨다.
 			response.sendRedirect(request.getContextPath()+"/index");
 			return false;
 		}
@@ -31,6 +32,7 @@ public class MyInterceptor implements HandlerInterceptor {
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
 		// TODO Auto-generated method stub
+		
 
 	}
 

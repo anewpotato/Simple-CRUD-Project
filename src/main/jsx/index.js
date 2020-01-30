@@ -2,8 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './App';
 import '../include/bootstrap';
+import '../webapp/resources/css/custom.css';
 
-import { Link, Route, BrowserRouter as Router } from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 
 ReactDOM.render(<Router><App /></Router>, document.getElementById('root'));
 

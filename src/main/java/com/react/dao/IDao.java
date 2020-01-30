@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import com.spring.react.dto.ContentDto;
 import com.spring.react.dto.ReplyDto;
 
-public interface IDao {
+public interface IDao { // Mybatis mapper interface IDao.xml로 연결된다.
 	
 	public ArrayList<ContentDto> listDao();
 	public ArrayList<ReplyDto> r_listDao(String bId);

@@ -1,6 +1,6 @@
 package com.spring.react.dto;
 
-public class AdminDto {
+public class AdminDto { // admin 로그인 정보를 저장하는 커맨드 객체
 	private String id;
 	private String pw;
 	public String getId() {

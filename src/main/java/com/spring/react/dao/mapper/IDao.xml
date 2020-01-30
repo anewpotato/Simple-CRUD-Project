@@ -3,7 +3,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.react.dao.IDao">
+<mapper namespace="com.react.dao.IDao"> <!-- IDao.java interface를 맵핑 -->
 
 <select resultType="com.spring.react.dto.ReplyDto" id="modifyReplyDao">SELECT RPW FROM POSTING_REPLY WHERE RID = #{param1} </select>
 <select resultType="com.spring.react.dto.ReplyDto" id="r_listDao">SELECT * FROM POSTING_REPLY WHERE RPOSTINGID =#{param1} ORDER BY RID DESC </select>

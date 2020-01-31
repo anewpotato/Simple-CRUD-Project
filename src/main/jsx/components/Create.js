@@ -37,7 +37,7 @@ class Create extends Component {
 			
 			 $.ajax({ // 해당 게시글의 정보를 읽어오는 ajax 통신
 			    	type:"GET", 
-			    	url: '/react/getContent/'+_bId,
+			    	url: '/react/posting/'+_bId,
 			    	dataType: "json", 
 			    	cache : false, 
 			    	success : function(resData)
@@ -91,7 +91,7 @@ class Create extends Component {
 		 if(this.props.mode==='create'){ // 생성 시
 		 $.ajax({  // ajax 통신을 통해 서버로 데이터를 전송
 		    	type:"POST", // 서버의 데이터를 수정하므로 POST type 요청
-		    	url: "/react/create",
+		    	url: "/react/posting",
 		    	contentType: "application/json", // JSON 형태로 전송
 		    	data : JSON.stringify(this.state.content), // content state를 stringify로 변환하여 전송한다.
 		    	cache : false, 
@@ -111,7 +111,7 @@ class Create extends Component {
 			 var _bId = this.props.match.params.bId;
 			 $.ajax({ // 수정된 내용을 서버에 전송하는 ajax 통신
 			    	type:"PUT", // 글의 일부분만 수정되므로 PUT type 요청
-			    	url: "/react/update/"+_bId,
+			    	url: "/react/posting/"+_bId,
 			    	contentType: "application/json", // JSON 형태로 전송
 			    	data : JSON.stringify(this.state.update), // update state를 stringify로 변환하여 전송한다.
 			    	cache : false, 
@@ -131,10 +131,8 @@ class Create extends Component {
 	 }
 	 
 	 resetContent(){ // 현재까지 작성된 정보를 초기화 시켜주는 메소드
-		 this.writerInput.value = '';
-		 this.titleInput.value = '';
-		 this.contentInput.value = '';
-		 this.state={
+		 
+		 this.setState({
 			    	content:{
 			    		bName:'',
 			    		bTitle:'',
@@ -144,7 +142,7 @@ class Create extends Component {
 			    		bTitle:'',
 			    		bContent:''
 			    	}		 
-			     };
+			     });
 	 }
 	 
 	render() {
@@ -152,7 +150,7 @@ class Create extends Component {
         	<div className="create">      		
         		{this.props.auth ==='' && (alert('Please select your Identity!!'),<Redirect to="/react/index"/>)}
         		{this.props.auth ==='visitor' && (alert('You have no authority!'),<Redirect to="/react/index"/>)}
-        		{(this.state.isCreated ==='true'||this.state.isModify==='true') && <Redirect to="/react/read"/>}
+        		{(this.state.isCreated ==='true'||this.state.isModify==='true') && <Redirect to="/react/postings"/>}
         		<h2>{this.props.desc}</h2>
 				<div id="writer">
 				<InputGroup >

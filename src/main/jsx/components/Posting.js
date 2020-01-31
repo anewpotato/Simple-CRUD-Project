@@ -14,23 +14,23 @@ class Posting extends Component {
 	    super(props);
 	   
 	    this.state = {
-	    	value:{},
-	    	reply:[],
-	    	write_reply:{
+	    	value:{}, // 해당 게시글의 정보가 저장되는 state
+	    	reply:[], // 해당 게시글의 댓글 정보가 저장되는 state
+	    	write_reply:{ // 사용자가 작성하는 댓글의 정보가 저장되는 state
 	    		rName:'',
 	    		rPw:'',
 	    		rContent:''
-	    	},modify_reply:{
+	    	},modify_reply:{ // 사용자가 댓글을 수정 시 작성하는 정보가 저장되는 state
 	    		rName:'',
 	    		rPw:'',
 	    		rContent:''
 	    	},
-	    	delete_reply:'',
-	    	isReplied:'false',
-	    	modifyPw:'',
-	    	selectedReply:0,
-	    	show:'false',
-	    	isDeleted:'false'
+	    	delete_reply:'', // 댓글의 비밀번호와 사용자가 입력한 비밀번호를 비교하기 위한 state
+	    	isReplied:'false', // 댓글 작성 여부를 관리하는 토글 state
+	    	modifyPw:'', // 특정 댓글의 비밀번호 정보가 저장되는 state
+	    	selectedReply:0, // 선택한 댓글의 고유 번호가 저장되는 state
+	    	show:'false', // 댓글 삭제 시 Alert 컴포넌트를 표시하기 위한 상태를 관리하는 토글 state
+	    	isDeleted:'false' // 댓글 삭제 여부를 관리하는 토글 state
 	    	
 	    };
 	    
@@ -38,41 +38,33 @@ class Posting extends Component {
 	}
 	
 	shouldComponentUpdate(nextProps,nextState){
-		 
+		// 댓글이 달리거나 삭제되었을 경우 해당 컴포넌트의 render를 다시 호출하면서 변경된 정보를 서버와 통신으로 가져온다.
 		if(this.state.isReplied !== nextState.isReplied || this.state.isDeleted !== nextState.isDeleted){
 			
 			var _rValue = [];
-			var _bId = this.props.match.params.bId;
-			
+			var _bId = this.props.match.params.bId;			
 			 $.ajax({ 
-			    	type:"GET", 
-			    	url: '/react/read/reply/'+_bId,
+			    	type:"GET", // 게시물의 댓글을 가져오므로 GET type
+			    	url: '/react/postings/reply/'+_bId, // 서버에 요청하는 URL, @pathvariable 어노테이션을 이용해 해당 게시글의 고유 번호를 조회한다.
 			    	dataType: "json", 
 			    	cache : false, 
 			    	success : function(resData)
 			    	{ 
-			    		
-			    		
+			    		// 댓글의 정보들이 저장됨
 			    		_rValue = resData.reply;
-			    		
-			    		
+			    		// 댓글의 정보에서 Timestamp로 지정되어 있는 rDate의 포맷을 변경 후 저장			    		
 					    $.each(_rValue, function( index, value ) {
 							  var sysdate = new Date(value.rDate);
 							  value.rDate = String(sysdate.getFullYear())+'/'+String(sysdate.getMonth()+1)+'/'+String(sysdate.getDate());
 							});
-					    this.writerInput.value = '';
-						 this.contentInput.value = '';
-						 this.pwInput.value = '';
-			    		this.setState({
-			    			
+					    
+					    // 댓글 정보를 state에 set 해준다.
+			    		this.setState({			    			
 			    			reply:_rValue
-			    		});
-			    		
+			    		});			    		
 			    	}.bind(this)
-			    });	
-			 
-		}
-		
+			    });				 
+		}		
 		 return true;
 	}
 	
@@ -80,10 +72,10 @@ class Posting extends Component {
 		var _value = null;
 		var _rValue = [];
 		var _bId = this.props.match.params.bId;
-		
+		// 초기 실행 시 해당 게시글의 정보와 댓글 정보를 서버로부터 받아온다. 
 		 $.ajax({ 
 		    	type:"GET", 
-		    	url: '/react/read/'+_bId,
+		    	url: '/react/postings/'+_bId,
 		    	dataType: "json", 
 		    	cache : false, 
 		    	success : function(resData)
@@ -107,14 +99,12 @@ class Posting extends Component {
 		    		
 		    	}.bind(this),
 		    	error : function(request,status,error){
-//		    		 alert("code = "+ request.status + " message = " + request.responseText + " error = " + error); // 실패 시 처리
 		    		 alert('Can\'t call data of posting');
 		    	}
 		    });	 
 	}
 	
-	 handleChange() {
-		 
+	 handleChange() { // 댓글 작성 시 입력값을 관리하는 메소드		 
 		 this.setState({		      
 			 write_reply:{
 		    	  rName:this.writerInput.value,
@@ -124,8 +114,8 @@ class Posting extends Component {
 		 });
 	 }
 	 
-	 handleModifyChange = (input,_index) => (e) => {
-		 if(_index !== this.state.selectedReply){
+	 handleModifyChange = (input,_index) => (e) => { // 수정 시 사용자의 입력값을 관리하는 메소드
+		 if(_index !== this.state.selectedReply){ // 수정을 선택한 댓글과는 다른 댓글을 수정하려고 할 경우 
 			 this.setState({
 				 modify_reply:{
 					 rName:'',
@@ -134,34 +124,27 @@ class Posting extends Component {
 				 }
 			 });
 			 alert('Please typing on the reply that you selected...');
-		 }else{
-			 this.setState({		      
+		 }else{ // 수정을 선택한 댓글을 수정 할 경우
+			 this.setState({ // 수정하기 위한 입력값을 state에 set해준다.		      
 				 modify_reply:{
 					 ...this.state.modify_reply,
-					 [input]:e.target.value
-	    	
+					 [input]:e.target.value	    	
 			      }
 			 });
-		 }
-		 
-		 
-		 
+		 }		 
 	 }
 	 
-	 handleDeleteChange = (e) => {
-		 
+	 handleDeleteChange = (e) => { // 삭제를 위한 비밀번호 입력값을 관리하는 메소드
 			 this.setState({		      
 				 delete_reply:e.target.value
 			 });
-		 
-			
 	 }
 	 
-	 sendReply(){
+	 sendReply(){ // 작성된 댓글을 서버에 전송하는 메소드
 		 var _bId = this.props.match.params.bId;
 		 $.ajax({ 
-		    	type:"POST", 
-		    	url: "/react/create/reply/"+_bId,
+		    	type:"POST", // 새로운 게시글을 작성하므로 POST type
+		    	url: "/react/posting/reply/"+_bId,
 		    	contentType: "application/json",
 		    	data : JSON.stringify(this.state.write_reply),
 		    	cache : false, 
@@ -182,38 +165,31 @@ class Posting extends Component {
 		    });
 	 }
 	 
-	 getReply(_rId){
-		
-		
+	 getReply(_rId){ // 사용자가 선택한 댓글의 비밀번호 정보를 서버로부터 가져오는 메소드		
 		 $.ajax({ 
 		    	type:"GET", 
-		    	url: "/react/reply/getpw/"+_rId,
+		    	url: "/react/posting/reply/password/"+_rId,
 		    	Type: "json",	    	
 		    	cache : false, 
 		    	success : function(resData)
 		    	{ 
-		    		this.setState({
+		    		this.setState({ // 가져온 비밀번호 정보를 state에 set해준다.
 		    			modifyPw:resData.pw.rPw
 		    		});
 		    		if(this.state.show==='false'){
 		    			this.setState({
 			    			show:'true'
 			    		});
-		    		}
-		    		
-		    		
-		    		
+		    		}    		
 		    	}.bind(this)
 		    });
 	 }
 	 
-	 modifyReply(_rId){
-		
-		 if(this.state.modifyPw === this.state.modify_reply.rPw){
-
+	 modifyReply(_rId){	// 사용자가 입력한 값을 기반으로 댓글을 수정하는 메소드	
+		 if(this.state.modifyPw === this.state.modify_reply.rPw){ // 사용자가 입력한 비밀번호와 서버로부터 받아온 비밀번호가 일치하는 경우에만 수정이 가능
 			 $.ajax({ 
-		    	type:"PUT", 
-		    	url: "/react/modify/reply/"+_rId,
+		    	type:"PUT", // 일부분만을 수정하는 경우 PUT type 사용 
+		    	url: "/react/posting/reply/"+_rId,
 		    	contentType: "application/json",
 		    	data : JSON.stringify(this.state.modify_reply),
 		    	cache : false, 
@@ -228,10 +204,7 @@ class Posting extends Component {
 			    			isReplied:'false'
 			    		});
 		    		}
-		    		alert('Reply is modified!!');
-		    		
-		    		
-		    		
+		    		alert('Reply is modified!!');    		
 		    	}.bind(this)
 		    });
 		 }else{
@@ -239,13 +212,11 @@ class Posting extends Component {
 		 }
 	 }
 	 
-	 deleteReply(_rId){
-			
-		 if(this.state.delete_reply ===this.state.modifyPw){
+	 deleteReply(_rId){ // 댓글을 삭제하는 메소드		
+		 if(this.state.delete_reply ===this.state.modifyPw){ // 사용자가 입력한 비밀번호 정보와 서버로부터 가져온 비밀번호가 일치하는 경우 삭제가 가능
 		 $.ajax({ 
 		    	type:"DELETE", 
-		    	url: '/react/delete/reply/'+_rId,
-		    	
+		    	url: '/react/posting/reply/'+_rId,	    	
 		    	cache : false, 
 		    	success : function()
 		    	{   		
@@ -256,22 +227,18 @@ class Posting extends Component {
 			    		});
 			    		}else if(this.state.isDeleted ==='true'){
 				    		this.setState({
-				    			isDeleted:'false',
-				    			
+				    			isDeleted:'false',			    			
 				    		});
 				    }
 		    		this.setState({
-		    			show:'false',
-		    			
+		    			show:'false',		    			
 		    		});
 		    		alert('The reply is deleted!!!');
 		    	}.bind(this)
 		    });
 		 }else if(this.state.delete_reply !==this.state.modifyPw){
 			 alert('Different Password!!');
-		 }
-		 
-		 
+		 }		 
 	}
 	 
 	render() { 
@@ -402,7 +369,7 @@ class Posting extends Component {
         	    <Card.Text>
         	    {this.state.value.bContent}
         	    </Card.Text>
-        	    <LinkContainer to="/react/read">  
+        	    <LinkContainer to="/react/postings">  
         	    <Card.Link id="toList" > >>Back to the list of Postings</Card.Link>
         	    </LinkContainer>
         	  </Card.Body>

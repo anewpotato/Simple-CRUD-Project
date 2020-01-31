@@ -15,7 +15,7 @@ class Selector extends Component {
 				            	Create
 				            	</ToggleButton>
 			            	</LinkContainer>       
-			            	<LinkContainer to="/react/read">
+			            	<LinkContainer to="/react/postings">
 			            		
 				            	<ToggleButton 				            
 				            	type="radio" name="read" value="2" variant="secondary">

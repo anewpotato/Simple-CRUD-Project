@@ -48,8 +48,8 @@ class Article extends Component {
 			<Switch>
 				<Route exact path = "/react/index" render={ props => <Home callbackFromParent={this.parentCallback} desc={this.state.welcome.desc}/>}/>
 				<Route exact path="/react/create" render={ props => <Create auth={this.state.isLogin} desc={this.state.create.desc} mode={'create'} />}/>	
-				<Route exact path="/react/read" render={ props => <Read auth={this.state.isLogin} desc={this.state.read.desc} mode={'read'} reload={this.state.isReload} />}/>
-				<Route exact path="/react/read/:bId" component={Posting}/>
+				<Route exact path="/react/postings" render={ props => <Read auth={this.state.isLogin} desc={this.state.read.desc} mode={'read'} reload={this.state.isReload} />}/>
+				<Route exact path="/react/postings/:bId" component={Posting}/>
 				<Route exact path="/react/update/:bId" render={ (props) => <Create desc={this.state.update.update} mode={'update'} {...props}/>}/>
 				<Route exact path="/react/update" render={ props => <Read auth={this.state.isLogin} desc={this.state.update.desc}  mode={'update'} />}/>
 				<Route exact path="/react/delete" render={ props => <Read auth={this.state.isLogin} desc={this.state.delete.desc}  mode={'delete'}/>}/>				

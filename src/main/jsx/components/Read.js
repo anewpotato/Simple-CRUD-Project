@@ -34,7 +34,7 @@ class Read extends Component {
 			var _values=[];
 			$.ajax({ // 서버로부터 게시글의 정보를 받아오는 ajax 통신 
 		    	type:"GET", // 데이터 조회를 위한 통신이므로 GET방식을 사용 
-		    	url: '/react/read', // 서버로 요청하는 URL
+		    	url: '/react/postings', // 서버로 요청하는 URL
 		    	dataType: "json",  // JSON 타입으로 데이터를 받아온다.
 		    	cache : false, // 게시글의 정보는 항상 변할 수 있기 때문에 cache 옵션은 false
 		    	success : function(resData) // 통신 성공 시 수행되는 메소드
@@ -68,7 +68,7 @@ class Read extends Component {
 			var _values=[];
 			$.ajax({ 
 		    	type:"GET", 
-		    	url: '/react/read',
+		    	url: '/react/postings',
 		    	dataType: "json", 
 		    	cache : false, 
 		    	success : function(resData)
@@ -101,7 +101,7 @@ class Read extends Component {
 	deleteContent(_bId){ // 게시글 고유의 id를 이용해 게시글을 삭제하는 메소드
 		$.ajax({ 
 	    	type:"DELETE", // 게시글 삭제를 위해 DELETE type으로  서버에게 ajax 통신 요청
-	    	url: '/react/delete/'+_bId, // 서버에 요청하는 URL, 서버에서 @PathVariable 어노테이션을 이용해 게시글 고유의 id값을 추출하기 위해 고유 아이디 값을 URL에 함께 붙혀 보낸다.	    	
+	    	url: '/react/posting/'+_bId, // 서버에 요청하는 URL, 서버에서 @PathVariable 어노테이션을 이용해 게시글 고유의 id값을 추출하기 위해 고유 아이디 값을 URL에 함께 붙혀 보낸다.	    	
 	    	cache : false, 
 	    	success : function() // 통신 성공 시 수행되는 메소드
 	    	{ 
@@ -199,7 +199,7 @@ class Read extends Component {
 				  														<ListGroup horizontal>
 		  																<ListGroup.Item className="content_writer">{_content.bName}</ListGroup.Item>
 		  																
-		  																{this.props.mode==='read'&&<LinkContainer to={`/react/read/${_content.bId}`}>
+		  																{this.props.mode==='read'&&<LinkContainer to={`/react/postings/${_content.bId}`}>
 		  																<ListGroup.Item className="content_title"><a href="/" >{_content.bTitle}</a></ListGroup.Item>
 		  																</LinkContainer>
 		  																}
@@ -221,7 +221,7 @@ class Read extends Component {
 		  																this.state.values[_index].bTitle.indexOf(this.state.search.title)>-1 && <ListGroup horizontal>
 		  																<ListGroup.Item className="content_writer">{_content.bName}</ListGroup.Item>
 		  																
-		  																{this.props.mode==='read'&&<LinkContainer to={`/react/read/${_content.bId}`}>
+		  																{this.props.mode==='read'&&<LinkContainer to={`/react/postings/${_content.bId}`}>
 		  																<ListGroup.Item className="content_title"><a href="/" >{_content.bTitle}</a></ListGroup.Item>
 		  																</LinkContainer>
 		  																}

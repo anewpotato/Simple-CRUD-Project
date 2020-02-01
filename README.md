@@ -47,7 +47,7 @@
   &nbsp;&nbsp;Back-end: Spring Framework 3.1.1.RELEASE, myBatis 3.2.8<br/>
   &nbsp;&nbsp;Front-end: React 16.12.0, React-bootstrap v1.0.0-beta 16<br/>
   &nbsp;&nbsp;Data Base: Oracle 11g Release 11.2.0.1.0<br/>
-  &nbsp;&nbsp;Web Pack: 4.41.5<br/>
+  &nbsp;&nbsp;Module Bundler: Web Pack 4.41.5<br/>
   &nbsp;&nbsp;Web browser: Chrome<br/>
     
    #### 1-3. 프로젝트 작동구조

@@ -10,23 +10,19 @@ public class ContentDto { // 게시판의 정보를 저장할 커맨드 객체
 	private String bContent;
 	private Timestamp bDate;
 	private int bHit;
-	private int bGroup;
-	private int bStep;
-	private int bIndent;
+
 	
 	public ContentDto(){}
 
 	
-	public ContentDto(int bId, String bName, String bTitle,String bContent, Timestamp bDate, int bHit, int bGroup, int bStep, int bIndent) {
+	public ContentDto(int bId, String bName, String bTitle,String bContent, Timestamp bDate, int bHit) {
 		this.bId = bId;
 		this.bName = bName;
 		this.bTitle = bTitle;
 		this.bContent = bContent;
 		this.bDate = bDate;
 		this.bHit = bHit;
-		this.bGroup = bGroup;
-		this.bStep = bStep;
-		this.bIndent = bIndent;
+		
 	}
 
 
@@ -80,29 +76,6 @@ public class ContentDto { // 게시판의 정보를 저장할 커맨드 객체
 		this.bHit = bHit;
 	}
 
-	public int getbGroup() {
-		return bGroup;
-	}
-
-	public void setbGroup(int bGroup) {
-		this.bGroup = bGroup;
-	}
-
-	public int getbStep() {
-		return bStep;
-	}
-
-	public void setbStep(int bStep) {
-		this.bStep = bStep;
-	}
-
-	public int getbIndent() {
-		return bIndent;
-	}
-
-	public void setbIndent(int bIndent) {
-		this.bIndent = bIndent;
-	}
 	
 	
 }

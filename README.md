@@ -14,6 +14,19 @@
   
 * Back-End(Spring Framework)
   1. DataBase 테이블 설계
+  2. Spring 설정파일 구성  
+    2-1. web.xml<br/>
+    2-2. servlet-context.xml
+  3. View 구성
+  4. Controller 구성
+  5. Model 구성
+    5-1. DTO 구성
+    5-2. DAO 구성 
+  6. Interceptor 구성
+  
+* 마치며
+  1. 프로젝트 보완사항
+  2. 소감
   
 ## 들어가며
  #### 1. 프로젝트 소개
@@ -43,7 +56,7 @@
     
   &nbsp;&nbsp;운영 체제: window10<br/>
   &nbsp;&nbsp;IDE: Eclipse 4.12.0<br/>
-  &nbsp;&nbsp;Back-end: Spring Framework 3.1.1.RELEASE, myBatis 3.2.8<br/>
+  &nbsp;&nbsp;Back-end: Spring Framework 3.1.1.RELEASE, myBatis 3.2.8, Tomcat 7.0.96<br/>
   &nbsp;&nbsp;Front-end: React 16.12.0, React-bootstrap v1.0.0-beta 16<br/>
   &nbsp;&nbsp;Data Base: Oracle 11g Release 11.2.0.1.0, Sql Developer 19.2.1.247<br/>
   &nbsp;&nbsp;Module Bundler: Web Pack 4.41.5<br/>
@@ -1469,6 +1482,688 @@ module.exports = { // webpack 설정
  #### 1. Database 테이블 설계
  
  &nbsp;&nbsp;본 프로젝트를 진행하면서 사용된 테이블은 두 가지입니다. 게시물이 저장되는 테이블의 경우 Spring Framework에 대한 학습을 진행할 때 예제로 사용했던 테이블을 약간 조작하여 사용하였고, 댓글 기능을 위한 테이블은 직접 작성하였습니다. 각각의 게시물에 댓글들이 종속되어야 하므로 외래키 조건을 사용하였습니다. 
+ 
+ ![DatabaseTable](./images/DatabaseTable.PNG)
+ 
+ &nbsp;&nbsp;Database를 위한 별도의 계정은 사용하지 않고 연습용 계정인 scott계정을 사용하였습니다. 우선 POSTING_REPLY 테이블은 특정 게시물에 속하는 댓글 테이블입니다. 각 댓글을 구분하기 위한 RID를 PRIMARY_KEY 제약조건으로 걸어주었습니다. 이후 RNAME은 댓글의 작성자, RCONTENT는 댓글의 내용, RDATE는 댓글의 작성일, RPW은 댓글의 비밀번호이며 IS NOT NULL 제약조건을 걸어주었습니다. 마지막으로 RPOSTINGID는 Foreign Key제약조건으로써 참조 테이블인 MVC_BOARD테이블에서 게시물의 고유한 값인 BID컬럼을 참조하게 되며 ON DELETE CASCADE 속성을 주어 해당 게시물이 삭제된다면 그에 따른 댓글들 역시 삭제되게 처리하였습니다.
+ 
+ &nbsp;&nbsp; 게시물들의 테이블인 MVC_BOARD테이블은 PRIMARY_KEY로 BID 컬럼을 가지며, 해당 컬럼은 각 게시물을 구분하게 해주는 고유한 아이디 값이 됩니다. 이후로 BNAME은 게시물의 작성자, BTITLE은 게시물의 제목, BCONTENT는 게시물의 내용, BDATE는 게시물의 작성일, BHIT은 게시물의 조회수를 나타내고 있습니다.
+ 
+ #### 2. Spring 설정파일 구성
+ 
+ #### 2-1. web.xml
+   
+&nbsp;&nbsp;우선 설정을위한 설정파일인 web.xml파일입니다. 초기 Web Application Server인 Tomcat이 최초 구동 시 각종 설정을 위한 xml파일을 설정해주는 파일입니다. 본 프로젝트는 한 개의 서블릿만을 이용하기 때문에 root-context.xml파일을 이용하지 않았습니다.
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee https://java.sun.com/xml/ns/javaee/web-app_2_5.xsd">
+
+	<!-- The definition of the Root Spring Container shared by all Servlets and Filters -->
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>/WEB-INF/spring/root-context.xml</param-value> <!-- view를 제외한 bean을 생성, 모든 서블릿과 필터가 공유-->
+	</context-param>
+	
+	<!-- Creates the Spring Container shared by all Servlets and Filters -->
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class> <!-- 모든 서블릿과 필터가 root-context를 공유할 수 있게 해주는 listener-->
+	</listener>
+
+	<!-- Processes application requests -->
+	<servlet> <!-- 서블릿 설정-->
+		<servlet-name>appServlet</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value> <!-- DispatcherServlet 역할을 수행 할 xml 파일 설정-->
+		</init-param>
+		<load-on-startup>1</load-on-startup> <!-- Servlet을 한 개 사용하므로 우선순위를 1로-->
+	</servlet>
+	
+	<servlet-mapping> <!-- 매칭 된 url-pattern은 appServlet을 통해 처리된다. -->
+		<servlet-name>appServlet</servlet-name>
+		<url-pattern>/</url-pattern>
+	</servlet-mapping>
+	
+	<!-- UTF-8인코딩을 위한 filter--> 
+	<filter>
+		<filter-name>encodingFilter</filter-name>
+		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
+		<init-param>
+			<param-name>encoding</param-name>
+			<param-value>UTF-8</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>encodingFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+</web-app>
+```
+
+#### 2-2. serlvet-context.xml
+   
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc https://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context.xsd">
+
+	<!-- DispatcherServlet Context: defines this servlet's request-processing infrastructure -->
+	
+	<!-- Enables the Spring MVC @Controller programming model -->
+	
+	<mvc:annotation-driven /> 
+
+	<!-- Handles HTTP GET requests for /resources/** by efficiently serving up static resources in the ${webappRoot}/resources directory -->
+	<!-- resources자원 위치-->
+	<mvc:resources mapping="/resources/**" location="/resources/" />
+
+	<!-- Resolves views selected for rendering by @Controllers to .jsp resources in the /WEB-INF/views directory -->
+	<!-- ViewResolver가 반환할 view에 대한 설정, prefix가 폴더의 위치, suffiix가 확장자를 의미-->
+	<beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<beans:property name="prefix" value="/WEB-INF/views/" />
+		<beans:property name="suffix" value=".jsp" />
+	</beans:bean>
+	
+	<context:component-scan base-package="com.spring.react"/>
+	
+	<!-- Oracle JDBC 설정-->
+	<beans:bean class="org.springframework.jdbc.datasource.DriverManagerDataSource" name="dataSource">
+	<beans:property value="oracle.jdbc.driver.OracleDriver" name="driverClassName"/>
+	<beans:property value="jdbc:oracle:thin:@localhost:1521:orcl" name="url"/>
+	<beans:property value="scott" name="username"/>
+	<beans:property value="****" name="password"/>
+	</beans:bean>
+	
+	<!-- sqlsessionfactory 인스턴스 bean, Oracle JDBC 설정 bean과 mapper의 위치정보를 가지고 있다.-->
+	<beans:bean class="org.mybatis.spring.SqlSessionFactoryBean" id="sqlSessionFactory">
+	<beans:property name="dataSource" ref="dataSource"/>
+	<beans:property value="classpath:com/spring/react/dao/mapper/*.xml" name="mapperLocations"/>
+	</beans:bean>
+	<!-- sqlsession을 대체하는 sqlsessionTemplate bean-->
+	<beans:bean class="org.mybatis.spring.SqlSessionTemplate" id="sqlSession">
+	<beans:constructor-arg ref="sqlSessionFactory" index="0"/>
+	</beans:bean>
+	
+	<!-- admin 로그인 정보를 가지고 있는 bean-->
+	<beans:bean class="com.spring.react.dto.AdminDto" id="adminInfo">
+	<beans:property name="id" value="fbtmdwhd33"/>
+	<beans:property name="pw" value="****"/>
+	</beans:bean>
+	
+	<!-- interceptor 처리, 각 URL을 메인 페이지를 방문하지 않고 접근할 경우 가로챈다.-->
+	<mvc:interceptors>
+		 <mvc:interceptor>
+			  <mvc:mapping path="/read" />
+			  <mvc:mapping path="/update" />
+			  <mvc:mapping path="/create" />
+			  <mvc:mapping path="/delete" />
+			  <mvc:mapping path="/login" />    
+					  <mvc:mapping path="/read/**" />
+					  <mvc:mapping path="/update/**" />
+					  <mvc:mapping path="/delete/**" /> 
+					  <mvc:mapping path="/create/**" /> 
+					  <mvc:mapping path="/reply/**" />
+					  <mvc:mapping path="/modify/**" />    	
+			  <beans:bean class="com.spring.react.interceptor.MyInterceptor" />
+		 </mvc:interceptor>
+	</mvc:interceptors>	
+</beans:beans>
+```
+
+
+#### 3. View 구성
+
+&nbsp;&nbsp; Spring MVC패턴 중 Model 2를 기반으로 하지만, View에 대한 처리는 Front-end를 담당하는 React에서 처리하므로 Spring 입장에서는 하나의 html 파일만을 넘겨주면 되 여기서 그 역할을 하는 .jsp파일입니다.
+
+#### page.jsp
+```jsp
+<%@ page language="java" contentType="text/html; charset=utf-8"
+%>
+<!doctype html>
+<html>
+<head>
+    <title>Simple CRUD!</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script> <!-- React에서 ajax 통신을 위한 처리-->
+</head>
+ 
+<body >
+    <div id="root" style="width:100%;height:100%"></div> <!-- React의 컴포넌트들이 그려 질 root div 태그-->
+   	<script src="resources/js/react/index.bundle.js"> </script>   <!-- Webpack을 이용해 번들링 한 번들 파일-->
+</body>
+</html>
+```
+
+#### 4. Controller 구성
+
+&nbsp;&nbsp; /react/index에 대한 요청과 여타 URL에 직접 접근하는 요청을 Redirection하는 처리를 제외하고는 Ajax 비동기 통신을 위한 요청을 처리하는 메소드들로 구성되어 있습니다. 이를 위한 통신에서 RESTful API를 적용하고자 했지만, 해당 내용에 대한 이해가 부족하여 HTTP Method를 이용해보았습니다.
+
+&nbsp;&nbsp; 각각의 Ajax 통신은 myBatis를 통해 DB처리가 이루어지는데 SqlSession 객체를 이용해 getMapper()메소드로 MappingInterface를 거쳐 별도로 등록해둔 mapper.xml 파일에서 sql문을 처리하게 됩니다. 이후의 처리는 Front-end에 전달할 데이터가 있을 경우 @ResponseBody 어노테이션을 통해 Map으로 저장하여 JSON형태로 전달하게 됩니다. 또한 필요한 데이터를 Front-end로 부터 전달받는 과정은 @RequestBody 어노테이션을 이용해 받아 처리하게 됩니다. 
+
+#### MyController.java
+
+```java
+package com.spring.react;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+
+import org.apache.ibatis.session.SqlSession;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.react.dao.IDao;
+import com.spring.react.dto.AdminDto;
+import com.spring.react.dto.ContentDto;
+import com.spring.react.dto.ReplyDto;
+
+@Controller
+public class MyController  {
+ 
+	@Autowired
+	private SqlSession sqlSession; // myBatis를 위한 sqlsessionTemplate bean
+	
+	@Autowired
+	private AdminDto admin; // admin 로그인 정보를 가지는 객체를 bean을 통해 자동 주입
+	
+	//CSR을 위한 Index페이지 요청
+	@RequestMapping(value = {"/index"})
+    public String page( HttpServletRequest request) {       		
+        
+		// index 페이지 방문 시 session을 생성하여 interceptor에서 필터링 되지 않게한다.
+        HttpSession session = request.getSession();
+        session.setAttribute("jud", "Normal connection");
+             
+        return "page";
+    }
+	
+	//특정 주소를 직접 접근 시 /index url로 redirection
+	@RequestMapping(value = {"/postings/{id}","/postings","/posting","/update","/delete"}) 
+    public String redirectURL() {
+	 	
+	 	return "redirect:/index";
+       
+    }
+	
+	//게시판 글 목록 요청
+	@RequestMapping(value = "/postings", method = RequestMethod.GET, produces="application/json") 
+    public @ResponseBody Object getReadContents() {
+		
+        IDao dao = sqlSession.getMapper(IDao.class);       
+        Map<String, Object> retVal = new HashMap<String, Object>();
+        ArrayList<ContentDto> list = new ArrayList<ContentDto>();
+        list = dao.listDao();
+        
+        retVal.put("contents",list);
+        
+        return retVal;
+       
+    }	 
+	
+	 //게시판의 특정 글 정보 요청, 최초에 한 번 댓글 리스트 요청
+	@RequestMapping(value = "/postings/{id}", method = RequestMethod.GET, produces="application/json") 
+    public @ResponseBody Object getReadContent(@PathVariable("id") final String id) {
+	 	
+	 IDao dao = sqlSession.getMapper(IDao.class);
+        Map<String, Object> retVal = new HashMap<String, Object>();
+        ContentDto dto = new ContentDto();
+        ArrayList<ReplyDto> r_dto = new ArrayList<ReplyDto>();
+        
+        dao.upHit(id); // 정보를 불러오기 전에 해당 게시글의 조회수를 올려준다.
+        dto = dao.viewDao(id);
+        r_dto = dao.r_listDao(id);
+        
+        retVal.put("post",dto);
+        retVal.put("reply",r_dto);
+       
+        return retVal;
+    }
+		 
+	 // 게시판의 특정 글에 속한 댓글 리스트의 별도 요청
+	@RequestMapping(value = "/postings/reply/{id}", method = RequestMethod.GET) 
+    public @ResponseBody Object getContentReply(@PathVariable("id") final String id){
+        
+	 IDao dao = sqlSession.getMapper(IDao.class);
+        Map<String, Object> retVal = new HashMap<String, Object>();    
+        ArrayList<ReplyDto> r_dto = new ArrayList<ReplyDto>(); 
+        
+        r_dto = dao.r_listDao(id); 
+        retVal.put("reply",r_dto);
+       
+        return retVal;	 	
+    }
+	 
+	//게시판의 수정을 위한 특정 글 정보 요청
+	@RequestMapping(value = "/posting/{id}", method = RequestMethod.GET) 
+	public @ResponseBody Object getUpdateContent(@PathVariable("id") final String id){
+	 	
+	 	IDao dao = sqlSession.getMapper(IDao.class);
+	    Map<String, Object> retVal = new HashMap<String, Object>();
+	    ContentDto dto = new ContentDto();
+	    
+	    dto = dao.viewDao(id);	    
+	    retVal.put("post",dto);
+	   
+	    return retVal;	 	
+	}
+	 	 
+	//게시판에 글 작성 정보 수신 후 DB에 추가
+	@RequestMapping(value = "/posting", method = RequestMethod.POST)	
+    public @ResponseBody void createContent(@RequestBody final ContentDto dto){
+	  
+		IDao dao = sqlSession.getMapper(IDao.class);
+		
+		dao.writeDao(dto.getbName(),dto.getbTitle(),dto.getbContent());      
+    }
+	 
+ 	//게시판에 글 수정 정보 수신 후 DB에 수정
+	@RequestMapping(value = "/posting/{id}", method = RequestMethod.PUT)
+	@ResponseBody
+    public void updateContent(@PathVariable("id") final String id,@RequestBody final ContentDto dto){
+	 
+		 IDao dao = sqlSession.getMapper(IDao.class);
+		 
+		 dao.updateDao(dto.getbName(),dto.getbTitle(),dto.getbContent(),id);     
+    }
+		 
+	//삭제할 글의 id값 수신 후 DB에서 삭제
+	@RequestMapping(value = "/posting/{id}", method = RequestMethod.DELETE)
+	@ResponseBody
+    public void deleteContent(@PathVariable("id") final String id){
+	 
+		 IDao dao = sqlSession.getMapper(IDao.class);
+		 
+		 dao.deleteDao(id);   	
+    }
+		 
+	//게시판의 특정 글에 대한 댓글 정보 수신 후 DB에 작성
+	@RequestMapping(value = "/posting/reply/{id}", method = RequestMethod.POST) 
+    public @ResponseBody void createReply(@PathVariable("id") final String id,@RequestBody final ReplyDto dto){
+	 	
+	 		IDao dao = sqlSession.getMapper(IDao.class);
+	 		
+	 		dao.writeReplyDao(dto.getrName(), dto.getrContent(), id,dto.getrPw());     
+    }
+		 
+	// 특정 게시글에서 선택한 댓글의 비밀번호 정보를 전송
+	@RequestMapping(value = "/posting/reply/password/{id}", method = RequestMethod.GET) 
+    public @ResponseBody Map<String, Object> modifyReply(@PathVariable("id") final String id){
+	 	 
+	 		IDao dao = sqlSession.getMapper(IDao.class);
+	 		ReplyDto dto = new ReplyDto();
+	 		Map<String, Object> retVal = new HashMap<String, Object>();
+
+	 		dto = dao.modifyReplyDao(id);       
+	 		retVal.put("pw",dto);
+        
+	 		return retVal;      
+    }
+		 
+	// 특정 게시글에서 댓글의 정보를 수정하기 위해 정보를 수신
+	@RequestMapping(value = "/posting/reply/{id}", method = RequestMethod.PUT) 
+    public @ResponseBody void modifyReply(@PathVariable("id") final String id,@RequestBody final ReplyDto dto){
+	 	
+	 		IDao dao = sqlSession.getMapper(IDao.class);
+	 		
+	 		dao.updateReplyDao(dto.getrName(), dto.getrContent(), id);      
+    }
+	// 특정 게시물에 속하는 특정 댓글을 삭제하기 위한 처리	 
+	@RequestMapping(value = "/posting/reply/{id}", method = RequestMethod.DELETE)		 
+    public @ResponseBody void deleteReply(@PathVariable("id") final String id){
+		 
+		 	IDao dao = sqlSession.getMapper(IDao.class);
+		 	
+		 	dao.deleteReplyDao(id);       
+	 }
+	
+	// React의 Home 컴포넌트 렌더링 시 호출되는 admin 로그인 정보
+	@RequestMapping(value = "/admin-info", method = RequestMethod.GET)		 
+    public @ResponseBody Map<String, Object> getLogin() {
+		 	
+	String id = admin.getId();
+	String pw = admin.getPw();
+	 	
+        Map<String, Object> retVal = new HashMap<String, Object>();
+        
+        retVal.put("id",id);
+        retVal.put("pw",pw);
+               
+        return retVal;
+    }	 		
+}
+```
+
+ #### 5. Model 구성
+ 
+ #### 5-1. DTO 구성
+ 
+ &nbsp;&nbsp; DB의 레코드와 매핑하기 위한 Data Transfer Object의 구성들입니다.
+ 
+ #### AdminDto.java
+ 
+ &&nbsp;&nbsp; AdminDto의 경우 admin의 로그인 정보를 가지고 있는 객체로 별도의 DB의 접근으로 값을 가져오지 않기 때문에, servlet-context.xml 설정 파일에서 값들을 설정해 놓았습니다.
+ 
+ ```java
+package com.spring.react.dto;
+
+public class AdminDto { // admin 로그인 정보를 저장하는 커맨드 객체
+	private String id;
+	private String pw;
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
+	public String getPw() {
+		return pw;
+	}
+	public void setPw(String pw) {
+		this.pw = pw;
+	}
+	
+}
+ ```
+ 
+  #### ContentDto.java
+ 
+ &&nbsp;&nbsp; ContentDto는 DB의 MVC_BOARD 테이블의 레코드와 매핑 시키기 위한 객체입니다.
+ 
+ ```java
+package com.spring.react.dto;
+
+import java.sql.Timestamp;
+
+public class ContentDto { // 게시판의 정보를 저장할 커맨드 객체
+	
+	private int bId;
+	private String bName;
+	private String bTitle;
+	private String bContent;
+	private Timestamp bDate;
+	private int bHit;
+	
+	public ContentDto(){}
+
+	public ContentDto(int bId, String bName, String bTitle,String bContent, Timestamp bDate, int bHit) {
+		this.bId = bId;
+		this.bName = bName;
+		this.bTitle = bTitle;
+		this.bContent = bContent;
+		this.bDate = bDate;
+		this.bHit = bHit;
+		
+	}
+
+	public String getbContent() {
+		return bContent;
+	}
+
+
+	public void setbContent(String bContent) {
+		this.bContent = bContent;
+	}
+
+
+	public int getbId() {
+		return bId;
+	}
+
+	public void setbId(int bId) {
+		this.bId = bId;
+	}
+
+	public String getbName() {
+		return bName;
+	}
+
+	public void setbName(String bName) {
+		this.bName = bName;
+	}
+
+	public String getbTitle() {
+		return bTitle;
+	}
+
+	public void setbTitle(String bTitle) {
+		this.bTitle = bTitle;
+	}
+
+	public Timestamp getbDate() {
+		return bDate;
+	}
+
+	public void setbDate(Timestamp bDate) {
+		this.bDate = bDate;
+	}
+
+	public int getbHit() {
+		return bHit;
+	}
+
+	public void setbHit(int bHit) {
+		this.bHit = bHit;
+	}	
+}
+ ```
+ 
+  #### ReplyDto.java
+ 
+ &&nbsp;&nbsp; ReplyDto는 DB의 POSTING_REPLY 테이블의 레코드와 매핑시킨 객체입니다.
+ 
+ ```java
+package com.spring.react.dto;
+
+import java.sql.Timestamp;
+
+public class ReplyDto { // 댓글 정보를 저장하는 커맨드 객체
+	private int rId;
+	private String rName;
+	private String rContent;
+	private Timestamp rDate;
+	private String rPw;
+	
+	public String getrPw() {
+		return rPw;
+	}
+
+	public void setrPw(String rPw) {
+		this.rPw = rPw;
+	}
+
+	public ReplyDto() {}
+	
+	public int getrId() {
+		return rId;
+	}
+	public void setrId(int rId) {
+		this.rId = rId;
+	}
+	public String getrName() {
+		return rName;
+	}
+	public void setrName(String rName) {
+		this.rName = rName;
+	}
+	public String getrContent() {
+		return rContent;
+	}
+	public void setrContent(String rContent) {
+		this.rContent = rContent;
+	}
+	public Timestamp getrDate() {
+		return rDate;
+	}
+	public void setrDate(Timestamp rDate) {
+		this.rDate = rDate;
+	}	
+}
+ ```
+ 
+  #### 5-2. DAO 구성
+ 
+ &nbsp;&nbsp; DB에 접속해 데이터를 조작하기 위한 Data Access Object입니다. myBatis를 사용하기 때문에 mappingInterface와 실질적인 sql문의 작성이 이루어진 mapper.xml이 존재합니다.
+ 
+ #### IDao.java
+ 
+ ```java
+package com.react.dao;
+
+import java.util.ArrayList;
+
+import com.spring.react.dto.ContentDto;
+import com.spring.react.dto.ReplyDto;
+
+public interface IDao { // Mybatis mapper interface IDao.xml로 연결된다.
+	
+	public ArrayList<ContentDto> listDao();
+	public ArrayList<ReplyDto> r_listDao(String bId);
+	public void writeDao(String mWriter,String mTitle, String mContent);
+	public void writeReplyDao(String mWriter,String mContent, String bId,String mPassword );
+	public void upHit(String bId);
+	public void updateDao(String mWriter,String mTitle, String mContent,String bId);
+	public ContentDto viewDao(String strID);
+	public ReplyDto modifyReplyDao(String strID);
+	public void deleteDao(String bId);
+	public void deleteReplyDao(String rId);
+	public void updateReplyDao(String mWriter,String mContent,String rId);
+	
+}
+ ```
+ 
+ #### IDao.xml
+ 
+ ```xml
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.react.dao.IDao"> <!-- IDao.java interface를 맵핑 -->
+
+<!-- 특정 댓글의 비밀번호를 DB로부터 가져오는 query-->
+<select resultType="com.spring.react.dto.ReplyDto" id="modifyReplyDao">SELECT RPW FROM POSTING_REPLY WHERE RID = #{param1} </select>
+
+<!-- 특정 게시물의 특정 댓글 정보를 가져오는 query-->
+<select resultType="com.spring.react.dto.ReplyDto" id="r_listDao">SELECT * FROM POSTING_REPLY WHERE RPOSTINGID =#{param1} ORDER BY RID DESC </select>
+	
+<!-- 모든 게시물의 정보를 가져오는 query-->
+<select resultType="com.spring.react.dto.ContentDto" id="listDao">SELECT * FROM MVC_BOARD ORDER BY BID DESC </select>
+	
+<!-- 특정 게시물의 정보를 가져오는 query-->
+<select resultType="com.spring.react.dto.ContentDto" id="viewDao">SELECT * FROM MVC_BOARD WHERE BID= #{param1} </select>
+
+<!-- 작성된 글의 정보를 전달받아 입력하는 query-->
+<insert id="writeDao">INSERT INTO MVC_BOARD(BID, BNAME, BTITLE, BCONTENT,BHIT) VALUES (mvc_board_seq.nextval,  #{param1},  #{param2},  #{param3}, 0 ) </insert>
+	
+<!-- 작성된 댓글의 정보를 전달받아 입력하는 query-->
+<insert id="writeReplyDao">INSERT INTO POSTING_REPLY(RID, RNAME, RCONTENT,RPOSTINGID,RPW) VALUES (SEQ_ID.nextval,  #{param1},  #{param2},  #{param3},#{param4}) </insert>
+
+<!-- 특정 댓글을 수정정보를 업데이트하는 query-->
+<update id="updateReplyDao">UPDATE POSTING_REPLY SET RNAME=#{param1} ,RCONTENT=#{param2} WHERE RID=#{param3}</update>
+	
+<!-- 특정 게시물의 조회수를 올리는 query-->
+<update id="upHit">UPDATE MVC_BOARD SET BHIT=BHIT+1 WHERE BID=#{param1}</update>
+	
+<!-- 특정 게시물의 수정정보를 업데이트하는 query-->
+<update id="updateDao">UPDATE MVC_BOARD SET BNAME=#{param1} ,BTITLE=#{param2},BCONTENT=#{param3} WHERE BID=#{param4}</update>
+
+<!-- 특정 게시물을 삭제하는 query-->
+<delete id="deleteDao">DELETE FROM MVC_BOARD WHERE BID = #{param1} </delete>
+	
+<!-- 특정 게시물의 특정 댓글을 삭제하는 query-->
+<delete id="deleteReplyDao">DELETE FROM POSTING_REPLY WHERE RID = #{param1} </delete>
+</mapper>
+ ```
+ 
+ #### 6. Interceptor 구성
+ 
+ &nbsp;&nbsp; 본 프로젝트의 경우 index 페이지를 제외한 페이지는 모두 권한 검사가 이루어지므로 초기 접속 시 index 페이지를 방문하여 권한을 선택할 수 있게끔 처리해주었습니다.
+ 
+  #### MyInterceptor.java
+  
+  &nbsp;&nbsp; index페이지를 방문 할 경우 서버측에서 session을 생성하여 방문 여부를 확인합니다. 만약 방문하지 않고 직접 URL로 접근하였다면, 특정 URL에 대한 메소드를 처리하지 않고 index 페이지로 redirection 처리를 해주었습니다.
+ 
+ ```java
+ package com.spring.react.interceptor;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+
+public class MyInterceptor implements HandlerInterceptor {
+
+	@Override
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+			throws Exception {
+		// TODO Auto-generated method stub
+		HttpSession session = request.getSession();
+
+		// index 페이지에 방문하여 session이 생성되지 않았을 경우
+		if(session == null || session.getAttribute("jud")==null) {
+			// index 페이지로 redirection 시킨다.
+			response.sendRedirect(request.getContextPath()+"/index");
+			return false;
+		}
+		else {
+			return true;
+		}
+	}
+		
+	@Override
+	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+			ModelAndView modelAndView) throws Exception {
+		// TODO Auto-generated method stub
+	}
+	@Override
+	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
+			throws Exception {
+		// TODO Auto-generated method stub
+	}
+}
+ ```
+ 
+ ## 마치며
+ #### 1. 프로젝트 보완사항
+ 
+ &nbsp;&nbsp;본 프로젝트는 우선 보안 측면에 있어서 굉장히 부족한 것 같습니다. 대표적으로 admin 로그인에 대한 부분이 그렇다고 생각합니다. 사용자의 권한을 부여하는 것을 프로젝트 막바지에 생각하고 추가하게 되어서 보안 관련하여 알아보았을 때 Spring Security라는 것이 존재하는 것을 알게 되었는데, 해당 사항까지 추가한다면 시간이 더 길어질 것 같아 추가하지 못하였습니다.
+ 
+ 
+&nbsp;&nbsp;또한 별도의 회원가입 기능을 고려하지 않아, 사용자들의 로그인 정보를 별도의 테이블로 관리하지 못한 부분 역시 아쉬웠습니다. 게다가 무언가 프로젝트의 뚜렷한 색깔이 없어 눈에 띄지 않는다고 생각합니다. 단순한 게시판의 기능밖에 부여하지 못하여 아쉽지만, 이번 경험을 통해 더 나은 웹 애플리케이션을 만들 수 있을 것 같다는 자신감은 생겼습니다. 
+
+#### 2. 소감
+
+&nbsp;&nbsp; 초기 프로젝트를 시작할 때에는 이런 결과물이나 낼 수 있을까 하는 의구심이 있었습니다. 그러나 시간은 좀 걸렸더라도 완성했기에 뿌듯합니다. 그러나 또 한편으로는 Spring 과 React 뿐만 아니라 기타 기술들에 대한 이해가 깊지 못한채 제작하였기 때문에 부족한 부분이 많이 발견되었습니다. 이러한 현상이 발생된 이유는 개인적인 욕심 때문인 것 같습니다. 초기 구상해놓은 프로젝트의 모습에서 무언가 더 욕심을 내어 많은 기능을 포함하고자 할 때 마다, 새로운 기술을 마주쳤고 그 때 마다 검색은 끝이 없었습니다. 하지만, 결국 비슷하게나마 흉내라도 낼 때 마다 저는 뿌듯했습니다. 
+
+&nbsp;&nbsp; 이번 프로젝트는 저에게는 많은 경험이 되었고, 저의 부족한 부분과 제가 할 수 있는 부분을 구별할 수 있는 능력을 가지게 해주었다고 생각합니다. 그렇기에 부족한 부분을 연마하고 알고있는 부분은 더욱 자세히 알아보고자 합니다. 저는 이 이후 신입 개발자로써 구직활동을 지속하면서 새로운 프로젝트를 하나 계획하고 있습니다. (각 사용자들로 부터 카테고리 별 유튜브 채널 추천 및 랭킹 웹) 본래 시간이 된다면 해당 프로젝트 마저 완성 후 구직 활동을 하려 했지만, 시간적으로 촉박하게 되어 우선적으로 본 포트폴리오를 작성한 후 진행하려 하고 있습니다.
+
+&nbsp;&nbsp;위의 언급한 사항들을 제외하고도 부족한 부분을 지적 해주신다면 달게 받겠습니다. 저의 경험이 되는 것이니까요ㅎㅎ. 많은 부족한 부분이 많은 프로젝트인 것 같지만, 귀엽게 봐주셨으면 합니다. 저는 이러한 경험을 통해 쌓은 경험치는 사라지지 않기 때문에 부끄러우면서도 자랑스럽다고 자부합니다. 이상 글을 마치겠습니다.
+
++) 본 포트폴리오는 지속적인 수정을 거치고 있습니다.
+ 
+ 
+
+ 
  
  
 

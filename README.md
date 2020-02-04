@@ -45,7 +45,7 @@
   &nbsp;&nbsp;IDE: Eclipse 4.12.0<br/>
   &nbsp;&nbsp;Back-end: Spring Framework 3.1.1.RELEASE, myBatis 3.2.8<br/>
   &nbsp;&nbsp;Front-end: React 16.12.0, React-bootstrap v1.0.0-beta 16<br/>
-  &nbsp;&nbsp;Data Base: Oracle 11g Release 11.2.0.1.0<br/>
+  &nbsp;&nbsp;Data Base: Oracle 11g Release 11.2.0.1.0, Sql Developer 19.2.1.247<br/>
   &nbsp;&nbsp;Module Bundler: Web Pack 4.41.5<br/>
   &nbsp;&nbsp;Web browser: Chrome<br/>
     
@@ -1464,6 +1464,13 @@ module.exports = { // webpack 설정
 ```
 
 &nbsp;&nbsp; webpack에 사용된 설정 파일입니다. webpack에 대한 완전한 이해는 불가능하지만, 검색을 통해 스스로 알아내어 이해하고 프로젝트에 적용시켜 보았습니다.
+
+## Back-end(Spring Framework)
+ #### 1. Database 테이블 설계
+ 
+ &nbsp;&nbsp;본 프로젝트를 진행하면서 사용된 테이블은 두 가지입니다. 게시물이 저장되는 테이블의 경우 Spring Framework에 대한 학습을 진행할 때 예제로 사용했던 테이블을 약간 조작하여 사용하였고, 댓글 기능을 위한 테이블은 직접 작성하였습니다. 각각의 게시물에 댓글들이 종속되어야 하므로 외래키 조건을 사용하였습니다. 
+ 
+ 
 
 
 

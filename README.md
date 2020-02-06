@@ -19,8 +19,8 @@
     2-2. servlet-context.xml
   3. View 구성
   4. Controller 구성
-  5. Model 구성
-    5-1. DTO 구성
+  5. Model 구성<br/>
+    5-1. DTO 구성  
     5-2. DAO 구성 
   6. Interceptor 구성
   
@@ -64,9 +64,9 @@
     
    #### 1-3. 프로젝트 작동구조
     
-   &nbsp;&nbsp; 서버 사이드 렌더링인 SSR방식이 아닌, 클라이언트 사이드 렌더링인 CSR방식을 이용해 SPA 구조로 개발을 하고자 노력했습니다. 프로젝트의 기본적인 작동 구조는 Back-end에서 Spring Framework을 이용해 한 개의 jsp파일만을 view로써 제공을 하게되는데, 해당 jsp 파일에 Front-end의 부분에서는 SPA구조의 웹 페이지를 개발할 때 많이 사용되는 React의 Create React App을 기반으로 개발하였고, 작업한 파일들을  Web Pack을 이용해 번들링하여 포함시켜 주었습니다.
+   &nbsp;&nbsp; 서버 사이드 렌더링인 SSR방식이 아닌, 클라이언트 사이드 렌더링인 CSR방식을 이용해 SPA 구조로 개발을 하고자 노력했습니다. 프로젝트의 기본적인 작동 구조는 Back-end에서 Spring Framework을 이용해 한 개의 jsp파일만을 view로써 제공을 하게 되는데, 해당 jsp 파일에 Front-end의 부분에서 SPA구조의 웹 페이지를 개발할 때 많이 사용되는 React의 Create React App을 기반으로 개발을 진행한 후, 작업한 파일들을  Web Pack을 이용해 번들링하여 포함시켜 주었습니다.
    
-   &nbsp;&nbsp;사용자가 정보를 필요로 하는 경우 서버와의 ajax 비동기 통신을 이용해 요청을 전달하고 서버는 myBatis를 이용해 mapper에 등록된 mapping interface에 해당하는 sql문을 이용해 Data Base에 접속하여 필요한 데이터를 추출하여 JSON형태로 전달하게 됩니다. 이 과정에서 Rest API를 적용하고자 노력하였으나, 해당 부분에 대한 이해가 미숙하여 일차적으로 HTTP Method인 GET, POST, PUT, DELETE만을 이용해 작성하였습니다.
+   &nbsp;&nbsp;사용자가 정보를 필요로 하는 경우 서버와의 ajax 비 동기 통신을 이용해 요청을 전달하고 서버는 myBatis를 이용해 mapper에 등록된 mapping interface에 해당하는 sql문을 이용해 Data Base에 접속하여 필요한 데이터를 추출하여 JSON형태로 전달하게 됩니다. 이 과정에서 Rest API를 적용하고자 노력하였으나, 해당 부분에 대한 이해가 미숙하여 일차적으로 HTTP Method인 GET, POST, PUT, DELETE만을 이용해 작성하였습니다.
    
    &nbsp;&nbsp; SPA구조가 가지는 문제점인 뒤로 가기, 앞으로 가기의 문제점은 React-Router를 이용해 React에서 특정 URL로 링크 시켜준 뒤 해당 링크와 일치하는 경우 특정 컴포넌트를 보여주는 방식으로 해결할 수 있었습니다.
    
@@ -116,7 +116,7 @@ import { BrowserRouter as Router } from "react-router-dom"; // react-router의 �
 
 ReactDOM.render(<Router><App /></Router>, document.getElementById('root')); // App 컴포넌트를 렌더링
 ```
-&nbsp;&nbsp; Create React App의 기본 구조를 사용하였으며, 모든 컴포넌트를 포함하는 App컴포넌트를 Virtual Dom인 ReactDOM을 이용해 서버측에서 넘겨준 jsp파일에서 id값이 root인 div태그 사이에 렌더링을 진행하게 됩니다.
+&nbsp;&nbsp; Create React App의 기본 구조를 사용하였으며, 모든 컴포넌트를 포함하는 App컴포넌트를 Virtual Dom인 ReactDOM을 이용해 서버 측에서 넘겨준 jsp파일에서 id값이 root인 div태그 사이에 렌더링을 진행하게 됩니다.
 
 #### App.js
 
@@ -197,7 +197,7 @@ class Article extends Component {
 
 export default Article; // export 
 ```
-&nbsp;&nbsp; 웹 페이지상의 Header컴포넌트와 메뉴를 선택하기 위한 Selector 컴포넌트를 제외하고 react-router로 URL의 변경에 따라 그려줄 컴포넌트를 변경해주기 때문에 거의 대부분의 컴포넌트를 포함하고 있는 Article 컴포넌트입니다. 뿐만 아니라 Home 컴포넌트에서 결정되는 사용자의 권한에 따라 state값을 관리하고 있습니다. /react/update/:bId로 라우팅되는 Create 컴포넌트에 사용자의 권한을 전달하지 않는 이유는 해당 URL은 /react/update URL로 매칭되는 Read 컴포넌트에서 접근이 가능하기 때문입니다.
+&nbsp;&nbsp; 웹 페이지상의 Header컴포넌트와 메뉴를 선택하기 위한 Selector 컴포넌트를 제외하고 react-router로 URL의 변경에 따라 그려줄 컴포넌트를 변경해주기 때문에 거의 대부분의 컴포넌트를 포함하고 있는 Article 컴포넌트입니다. 뿐만 아니라 Home 컴포넌트에서 결정되는 사용자의 권한에 따라 state값을 관리하고 있습니다. /react/update/:bId로 라우팅 되는 Create 컴포넌트에 사용자의 권한을 전달하지 않는 이유는 해당 URL은 /react/update URL로 매칭 되는 Read 컴포넌트에서 접근이 가능하기 때문입니다.
 
 #### Footer.js
 
@@ -294,7 +294,7 @@ render() {
 
 export default Selector; // export 처리
 ```
-&nbsp;&nbsp; CRUD에 맞는 컴포넌트를 선택하기 위한 메뉴바 컴포넌트입니다. react-bootstrap의 ButtonGroup 컴포넌트와 ToggleButton 컴포넌트를 이용해 각 버튼을 표시했습니다. ToggleButton이 가지는 variant 속성은 각 버튼들의 디자인에 따른 값들입니다. 여러개의 디자인 중 저는 secondary디자인을 선택했습니다. 
+&nbsp;&nbsp; CRUD에 맞는 컴포넌트를 선택하기 위한 메뉴 바 컴포넌트입니다. react-bootstrap의 ButtonGroup 컴포넌트와 ToggleButton 컴포넌트를 이용해 각 버튼을 표시했습니다. ToggleButton이 가지는 variant 속성은 각 버튼들의 디자인에 따른 값들입니다. 여러 개의 디자인 중 저는 secondary디자인을 선택했습니다. 
 
 #### Home.js
 
@@ -448,7 +448,7 @@ render() {
 
 export default Home; // export 처리
 ```
-&nbsp;&nbsp; 초기에 웹에 접속 시(react/index) 보여지는 컴포넌트입니다. 컴포넌트의 렌더링이 완료 된 이후, componentDidMount()메소드가 실행되면서 Ajax 비동기 통신을 이용하여 서버로부터 Admin의 로그인 정보를 가져와 state에 저장하게 됩니다. 해당 컴포넌트에서 사용자의 권한을 체크하게 되는데, 사용자가 Admin일 경우 알고있는 Admin 로그인 정보를 이용해 로그인 시 부모 컴포넌트의 사용자 권한은 'admin'으로 설정되며 Visitor일 경우 'visitor'로 설정됩니다. 
+&nbsp;&nbsp; 초기에 웹에 접속 시(react/index) 보여 지는 컴포넌트입니다. 컴포넌트의 렌더링이 완료 된 이후, componentDidMount()메소드가 실행되면서 Ajax 비 동기 통신을 이용하여 서버로부터 Admin의 로그인 정보를 가져와 state에 저장하게 됩니다. 해당 컴포넌트에서 사용자의 권한을 체크하게 되는데, 사용자가 Admin일 경우 알고 있는 Admin 로그인 정보를 이용해 로그인 시 부모 컴포넌트의 사용자 권한은 'admin'으로 설정되며 Visitor일 경우 'visitor'로 설정됩니다. 
 
 #### Create.js
 
@@ -672,7 +672,7 @@ class Create extends Component {
 
 export default Create; // export 처리
 ```
-&nbsp;&nbsp; 글의 생성인 Create와 글의 수정인 Update 기능을 처리하는 컴포넌트입니다. 초기 구상은 별도의 컴포넌트로 구상하였으나, 글이 작성되는 UI와 글이 수정되는 UI의 차이가 크지 않기 때문에 부모 컴포넌트인 Article로 부터 전달받은 mode props를 통해 두 기능을 구분하였습니다. 컴포넌트가 렌더링될 때 mode props가 update인 경우는 사용자가 수정하고자 하는 게시물의 정보를 가져와 표시해주어야 하므로 서버와 Ajax 비동기 통신을 수행합니다. 이후 글의 작성이 완료되거나 수정되었을 경우 onClick 이벤트에 설정된 메소드에 의해 다시한번 서버와 Ajax 비동기 통신을 수행합니다. 
+&nbsp;&nbsp; 글의 생성인 Create와 글의 수정인 Update 기능을 처리하는 컴포넌트입니다. 초기 구상은 별도의 컴포넌트로 구상하였으나, 글이 작성되는 UI와 글이 수정되는 UI의 차이가 크지 않기 때문에 부모 컴포넌트인 Article로 부터 전달받은 mode props를 통해 두 기능을 구분하였습니다. 컴포넌트가 렌더링 될 때 mode props가 update인 경우는 사용자가 수정하고자 하는 게시물의 정보를 가져와 표시해주어야 하므로 서버와 Ajax 비 동기 통신을 수행합니다. 이후 글의 작성이 완료되거나 수정되었을 경우 onClick 이벤트에 설정된 메소드에 의해 다시 한번 서버와 Ajax 비 동기 통신을 수행합니다. 
 
 #### Read.js
 
@@ -979,7 +979,7 @@ render() {
 
 export default Read; // export 처리
 ```
-&nbsp;&nbsp; Read 컴포넌트 역시 초기 구상시에는 Update와 Delete를 분리하고자 했지만, Create 컴포넌트와 마찬가지로 UI적으로 유사한 부분이 많다고 생각했기 때문에 부모 컴포넌트인 Article로 부터 받은 props값을 통해 구분하여 처리하고자 하였습니다. 초기 렌더링 후 호출되는 componentDidMount()메소드에서는 권한 조건에 부합하는 경우 서버로부터 Ajax 비동기 통신을 통해 게시물들의 정보를 읽어오게 됩니다. shouldComponentUpdate()메소드의 경우는 현재 Read 컴포넌트에서 발생할 수 있는 변화요소는 게시물의 삭제의 경우이므로 게시물의 삭제 여부를 state의 변화여부로 판단하여 글이 삭제되었을 경우 Read 컴포넌트에서 서버로부터 Ajax 비동기 통신을 이용해 게시물의 정보를 다시 읽어와 렌더링하게 됩니다.
+&nbsp;&nbsp; Read 컴포넌트 역시 초기 구상 시에는 Update와 Delete를 분리하고자 했지만, Create 컴포넌트와 마찬가지로 UI적으로 유사한 부분이 많다고 생각했기 때문에 부모 컴포넌트인 Article로 부터 받은 props값을 통해 구분하여 처리하고자 하였습니다. 초기 렌더링 후 호출되는 componentDidMount()메소드에서는 권한 조건에 부합하는 경우 서버로부터 Ajax 비 동기 통신을 통해 게시물들의 정보를 읽어오게 됩니다. shouldComponentUpdate()메소드의 경우는 현재 Read 컴포넌트에서 발생할 수 있는 변화요소는 게시물의 삭제의 경우이므로 게시물의 삭제 여부를 state의 변화여부로 판단하여 글이 삭제되었을 경우 Read 컴포넌트에서 서버로부터 Ajax 비 동기 통신을 이용해 게시물의 정보를 다시 읽어와 렌더링하게 됩니다.
 
 #### Posting.js
 
@@ -1434,7 +1434,7 @@ render() {
 
 export default Posting; // export 처리
 ```
-&nbsp;&nbsp; 특정 게시물의 작성 정보와 해당 게시물에 포함되어있는 댓글들을 보여주는 컴포넌트입니다. 초기에는 댓글 기능을 구상하지 않았기 때문에 후에 작업한 부분이 많습니다. 우선 초기 Posting 컴포넌트가 렌더링 된 후 호출되는 componentDidMount() 메소드를 통해 해당 게시물의 정보와 댓글정보를 서버로부터 Ajax 비동기 통신을 이용해 받아오게 됩니다. 이후 댓글의 작성 시 shouldComponentUpdate() 메소드를 통해 댓글의 작성 및 삭제를 state값을 통하여 감지한 후 서버와 Ajax 비동기 통신을 수행하게 됩니다. 뿐만 아니라 댓글의 수정 시 수정 내용을 서버로 보내는 Ajax 비동기 통신을 수행하며, 댓글의 작성, 삭제, 수정의 과정은 별도의 메소드를 통해 기본적인 Ajax 비동기 통신을 수행합니다.
+&nbsp;&nbsp; 특정 게시물의 작성 정보와 해당 게시물에 포함되어있는 댓글들을 보여주는 컴포넌트입니다. 초기에는 댓글 기능을 구상하지 않았기 때문에 후에 작업한 부분이 많습니다. 우선 초기 Posting 컴포넌트가 렌더링 된 후 호출되는 componentDidMount() 메소드를 통해 해당 게시물의 정보와 댓글정보를 서버로부터 Ajax 비 동기 통신을 이용해 받아오게 됩니다. 이후 댓글의 작성 시 shouldComponentUpdate() 메소드를 통해 댓글의 작성 및 삭제를 state값을 통하여 감지한 후 서버와 Ajax 비 동기 통신을 수행하게 됩니다. 뿐만 아니라 댓글의 수정 시 수정 내용을 서버로 보내는 Ajax 비 동기 통신을 수행하며, 댓글의 작성, 삭제, 수정의 과정은 별도의 메소드를 통해 기본적인 Ajax 비 동기 통신을 수행합니다.
 
 #### webpack.config.js
 
@@ -1479,6 +1479,32 @@ module.exports = { // webpack 설정
 &nbsp;&nbsp; webpack에 사용된 설정 파일입니다. webpack에 대한 완전한 이해는 불가능하지만, 검색을 통해 스스로 알아내어 이해하고 프로젝트에 적용시켜 보았습니다.
 
 ## Back-end(Spring Framework)
+
+&nbsp;&nbsp; 우선 Back-end의 프로젝트 구조는 아래와 같습니다.
+
+>src
+>>main
+>>>java
+>>>>com
+>>>>>react
+>>>>>>dao
+>>>>>>>IDao.java
+
+>>>>>spring
+>>>>>>react
+>>>>>>>MyController.java<br/>
+>>>>>>>dao
+>>>>>>>>mapper
+>>>>>>>>>IDao.xml
+
+>>>>>>>dto
+>>>>>>>>AdminDto.java<br/>
+>>>>>>>>ContentDto.java<br/>
+>>>>>>>>ReplyDto.java
+
+>>>>>>>interceptor
+>>>>>>>>MyInterceptor.java
+
  #### 1. Database 테이블 설계
  
  &nbsp;&nbsp;본 프로젝트를 진행하면서 사용된 테이블은 두 가지입니다. 게시물이 저장되는 테이블의 경우 Spring Framework에 대한 학습을 진행할 때 예제로 사용했던 테이블을 약간 조작하여 사용하였고, 댓글 기능을 위한 테이블은 직접 작성하였습니다. 각각의 게시물에 댓글들이 종속되어야 하므로 외래키 조건을 사용하였습니다. 
@@ -1487,13 +1513,13 @@ module.exports = { // webpack 설정
  
  &nbsp;&nbsp;Database를 위한 별도의 계정은 사용하지 않고 연습용 계정인 scott계정을 사용하였습니다. 우선 POSTING_REPLY 테이블은 특정 게시물에 속하는 댓글 테이블입니다. 각 댓글을 구분하기 위한 RID를 PRIMARY_KEY 제약조건으로 걸어주었습니다. 이후 RNAME은 댓글의 작성자, RCONTENT는 댓글의 내용, RDATE는 댓글의 작성일, RPW은 댓글의 비밀번호이며 IS NOT NULL 제약조건을 걸어주었습니다. 마지막으로 RPOSTINGID는 Foreign Key제약조건으로써 참조 테이블인 MVC_BOARD테이블에서 게시물의 고유한 값인 BID컬럼을 참조하게 되며 ON DELETE CASCADE 속성을 주어 해당 게시물이 삭제된다면 그에 따른 댓글들 역시 삭제되게 처리하였습니다.
  
- &nbsp;&nbsp; 게시물들의 테이블인 MVC_BOARD테이블은 PRIMARY_KEY로 BID 컬럼을 가지며, 해당 컬럼은 각 게시물을 구분하게 해주는 고유한 아이디 값이 됩니다. 이후로 BNAME은 게시물의 작성자, BTITLE은 게시물의 제목, BCONTENT는 게시물의 내용, BDATE는 게시물의 작성일, BHIT은 게시물의 조회수를 나타내고 있습니다.
+ &nbsp;&nbsp; 게시물들의 테이블인 MVC_BOARD테이블은 PRIMARY_KEY로 BID 컬럼을 가지며, 해당 컬럼은 각 게시물을 구분하게 해주는 고유한 아이디 값이 됩니다. 이후로 BNAME은 게시물의 작성자, BTITLE은 게시물의 제목, BCONTENT는 게시물의 내용, BDATE는 게시물의 작성일, BHIT은 게시물의 조회 수를 나타내고 있습니다.
  
  #### 2. Spring 설정파일 구성
  
  #### 2-1. web.xml
    
-&nbsp;&nbsp;우선 설정을위한 설정파일인 web.xml파일입니다. 초기 Web Application Server인 Tomcat이 최초 구동 시 각종 설정을 위한 xml파일을 설정해주는 파일입니다. 본 프로젝트는 한 개의 서블릿만을 이용하기 때문에 root-context.xml파일을 이용하지 않았습니다.
+&nbsp;&nbsp;우선 설정을 위한 설정파일인 web.xml파일입니다. 초기 Web Application Server인 Tomcat이 최초 구동 시 각종 설정을 위한 xml파일을 설정해주는 파일입니다. 본 프로젝트는 한 개의 서블릿만을 이용하기 때문에 root-context.xml파일을 이용하지 않았습니다.
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app version="2.5" xmlns="http://java.sun.com/xml/ns/javaee"
@@ -1644,7 +1670,7 @@ module.exports = { // webpack 설정
 
 #### 4. Controller 구성
 
-&nbsp;&nbsp; /react/index에 대한 요청과 여타 URL에 직접 접근하는 요청을 Redirection하는 처리를 제외하고는 Ajax 비동기 통신을 위한 요청을 처리하는 메소드들로 구성되어 있습니다. 이를 위한 통신에서 RESTful API를 적용하고자 했지만, 해당 내용에 대한 이해가 부족하여 HTTP Method를 이용해보았습니다.
+&nbsp;&nbsp; /react/index에 대한 요청과 여타 URL에 직접 접근하는 요청을 Redirection하는 처리를 제외하고는 Ajax 비 동기 통신을 위한 요청을 처리하는 메소드들로 구성되어 있습니다. 이를 위한 통신에서 RESTful API를 적용하고자 했지만, 해당 내용에 대한 이해가 부족하여 HTTP Method를 이용해보았습니다.
 
 &nbsp;&nbsp; 각각의 Ajax 통신은 myBatis를 통해 DB처리가 이루어지는데 SqlSession 객체를 이용해 getMapper()메소드로 MappingInterface를 거쳐 별도로 등록해둔 mapper.xml 파일에서 sql문을 처리하게 됩니다. 이후의 처리는 Front-end에 전달할 데이터가 있을 경우 @ResponseBody 어노테이션을 통해 Map으로 저장하여 JSON형태로 전달하게 됩니다. 또한 필요한 데이터를 Front-end로 부터 전달받는 과정은 @RequestBody 어노테이션을 이용해 받아 처리하게 됩니다. 
 
@@ -2153,9 +2179,9 @@ public class MyInterceptor implements HandlerInterceptor {
 
 #### 2. 소감
 
-&nbsp;&nbsp; 초기 프로젝트를 시작할 때에는 이런 결과물이나 낼 수 있을까 하는 의구심이 있었습니다. 그러나 시간은 좀 걸렸더라도 완성했기에 뿌듯합니다. 그러나 또 한편으로는 Spring 과 React 뿐만 아니라 기타 기술들에 대한 이해가 깊지 못한채 제작하였기 때문에 부족한 부분이 많이 발견되었습니다. 이러한 현상이 발생된 이유는 개인적인 욕심 때문인 것 같습니다. 초기 구상해놓은 프로젝트의 모습에서 무언가 더 욕심을 내어 많은 기능을 포함하고자 할 때 마다, 새로운 기술을 마주쳤고 그 때 마다 검색은 끝이 없었습니다. 하지만, 결국 비슷하게나마 흉내라도 낼 때 마다 저는 뿌듯했습니다. 
+&nbsp;&nbsp; 초기 프로젝트를 시작할 때에는 이런 결과물이나 낼 수 있을까 하는 의구심이 있었습니다. 그러나 시간은 좀 걸렸더라도 완성했기에 뿌듯합니다. 그러나 또 한편으로는 Spring 과 React 뿐만 아니라 기타 기술들에 대한 이해가 깊지 못한 채 제작하였기 때문에 부족한 부분이 많이 발견되었습니다. 이러한 현상이 발생된 이유는 개인적인 욕심 때문인 것 같습니다. 초기 구상해놓은 프로젝트의 모습에서 무언가 더 욕심을 내어 많은 기능을 포함하고자 할 때 마다, 새로운 기술을 마주쳤고 그 때 마다 검색은 끝이 없었습니다. 하지만, 결국 비슷하게나마 흉내라도 낼 때 마다 저는 뿌듯했습니다. 
 
-&nbsp;&nbsp; 이번 프로젝트는 저에게는 많은 경험이 되었고, 저의 부족한 부분과 제가 할 수 있는 부분을 구별할 수 있는 능력을 가지게 해주었다고 생각합니다. 그렇기에 부족한 부분을 연마하고 알고있는 부분은 더욱 자세히 알아보고자 합니다. 저는 이 이후 신입 개발자로써 구직활동을 지속하면서 새로운 프로젝트를 하나 계획하고 있습니다. (각 사용자들로 부터 카테고리 별 유튜브 채널 추천 및 랭킹 웹) 본래 시간이 된다면 해당 프로젝트 마저 완성 후 구직 활동을 하려 했지만, 시간적으로 촉박하게 되어 우선적으로 본 포트폴리오를 작성한 후 진행하려 하고 있습니다.
+&nbsp;&nbsp; 이번 프로젝트는 저에게는 많은 경험이 되었고, 저의 부족한 부분과 제가 할 수 있는 부분을 구별할 수 있는 능력을 가지게 해주었다고 생각합니다. 그렇기에 부족한 부분을 연마하고 알고 있는 부분은 더욱 자세히 알아보고자 합니다. 저는 이 이후 신입 개발자로써 구직활동을 지속하면서 새로운 프로젝트를 하나 계획하고 있습니다. (각 사용자들로 부터 카테고리 별 유튜브 채널 추천 및 랭킹 웹) 본래 시간이 된다면 해당 프로젝트 역시 완성 후 구직 활동을 하려 했지만, 시간적으로 촉박하게 되어 우선적으로 본 포트폴리오를 작성한 후 진행하려 하고 있습니다.
 
 &nbsp;&nbsp;위의 언급한 사항들을 제외하고도 부족한 부분을 지적 해주신다면 달게 받겠습니다. 저의 경험이 되는 것이니까요ㅎㅎ. 많은 부족한 부분이 많은 프로젝트인 것 같지만, 귀엽게 봐주셨으면 합니다. 저는 이러한 경험을 통해 쌓은 경험치는 사라지지 않기 때문에 부끄러우면서도 자랑스럽다고 자부합니다. 이상 글을 마치겠습니다.
 

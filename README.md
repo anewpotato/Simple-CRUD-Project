@@ -2,7 +2,8 @@
 ![mainPage](./images/mainPage.PNG)
 
 made by 유승종
-contact
+
+contact 010-4692-7597/fbtmdwhd33@naver.com
 ## 목차
 * 들어가며
   1. 프로젝트 소개  

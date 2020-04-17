@@ -1,6 +1,8 @@
 # Simple-CRUD-Project
 ![mainPage](./images/mainPage.PNG)
 
+made by 유승종
+contact
 ## 목차
 * 들어가며
   1. 프로젝트 소개  
